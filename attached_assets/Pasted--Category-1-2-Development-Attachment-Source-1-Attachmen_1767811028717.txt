@@ -1,0 +1,59 @@
+ Category 1.2: Development & Attachment
+    - Source 1: Attachment Styles, Ephor
+      - DOK 1 - Facts
+        - There are two axes in attachment styles: anxiety and avoidance
+          - Think of them as sliders
+          - Anxiety = worry about people leaving
+          - Avoidance = not talking about feelings
+        - Style #1: Secure
+          - Low anxiety, low avoidance
+          - “I’m lovable and others are reliable.”
+          - Patterns
+            - Warm reciprocity, quick conflict repair
+            - 
+        - Style #2: Anxious-preoccupied
+          - High anxiety, low avoidance
+          - "I need people close, if there is any distance, it's a threat"
+          - Patterns
+            - Protest behaviors, needs constant reassurance
+            - ↑ anxiety, panic, social‑media over‑engagement; higher inflammation
+        - Style #3: Dismissive-avoidant
+          - Low anxiety, high avoidance
+          - “I’m safest solo because intimacy is risky.”
+          - Patterns
+            - Emotional distance, ghosting, disconnect under stress
+            - ↑ substance use, lower help‑seeking, cardiovascular risk
+        - 
+          - High anxiety, high avoidance
+          - "I want you, but you'll hurt me"
+          - Patterns
+            - Flip‑flop intimacy & withdrawal
+            - Strongest link to PTSD, self‑harm, dissociation
+            - Strongest link to feeling like they don't deserve love
+        - Where do they come from? 
+          - Early caregiver sensitivity → internal working models.
+          - Later corrective (or compounding) experiences: partners, mentors, therapy.
+          - Genes × environment: temperament, serotonin & oxytocin genes tweak thresholds but don’t lock you in.
+          - Epigenetics & stress hormones: chronic threat exposure can bias the HPA axis toward hyper‑ or hypo‑arousal
+          - Bad relationships
+        - Ways to become secure
+          - Emotionally Focused Therapy (EFT)
+            - 
+            - [https://iceeft.com/eft-research-3/](https://iceeft.com/eft-research-3/)
+          - Attachment‑based group / mentorship
+            - [https://pubmed.ncbi.nlm.nih.gov/39184548/](https://pubmed.ncbi.nlm.nih.gov/39184548/?utm_source=chatgpt.com)
+          - Self‑compassion training
+            - 
+            - Stack self‑compassion: 5‑minute daily journaling (Three O’s: Observe feeling → Offer kindness → Opt for small need you can meet).
+            - [https://www.simplypsychology.org/self-compassion-and-attachment-in-adults.html](https://www.simplypsychology.org/self-compassion-and-attachment-in-adults.html?utm_source=chatgpt.com)
+          - Mindfulness + somatic work
+            - Lowers attachment anxiety by reducing interoceptive threat misreads.
+          - “Earned secure” relationships
+            - One consistently responsive partner/friend can remodel internal models over a few years.
+        - Self-audit
+          - When I need help, do I reach out or power through alone?
+          - When a text isn’t answered quickly, do I catastrophize or shrug?
+          - Do compliments feel good or uncomfortable?
+      - DOK 2 - Summary
+      - Link
+    - Source 2: Key Theories and Overview of Human Dev, Gemini Chat
