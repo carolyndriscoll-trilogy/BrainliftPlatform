@@ -1,0 +1,31 @@
+The DOK1 extraction process is handled by a specialized AI module (server/ai/brainliftExtractor.ts) that uses Claude 4.5 Opus via OpenRouter. The process happens in three distinct phases:
+
+1. The Pre-Filter Phase (Heuristic Scan)
+Before sending the document to the AI, the system runs a "rough scan" using regex patterns to find potential DOK1 content. It looks for two specific patterns:
+
+Dedicated Sections: Headers like DOK1, DOK1 - Facts, or Level 1.
+Inline Markers: Any line that ends with the literal string (DOK1).
+If the system finds zero of these markers, it immediately classifies the document as not_brainlift without even calling the AI. This saves cost and provides instant feedback if the document isn't formatted correctly.
+
+2. The AI Extraction Phase (Requisites)
+Once potential DOK1 content is found, the pre-filtered text is sent to the AI with a strict "System Prompt." The AI is instructed to define DOK1 facts based on these requirements:
+
+Verifiable Claims: The fact must be a specific, verifiable statement.
+Source Attribution: Every single fact must include a cited source (e.g., "Private School Review 2024").
+Depth of Knowledge (DOK) Structure: It specifically ignores "Core Insights," "Action Items," or "Recommendations" unless they are explicitly tagged as DOK1.
+3. The Verification & Scoring Phase
+The AI doesn't just copy the text; it performs a "self-verification" loop for every extracted fact:
+
+Truth Check: It verifies if the claim is actually true (not just present in the text).
+Support Check: It confirms the cited source actually says what the fact claims.
+Accuracy Score (1-5):
+5 (Verified): Claim is true AND the source supports it perfectly.
+3 (Partial): Claim has truth but overreaches or lacks context.
+1 (Not Verified): Claim is false or source directly contradicts it.
+Why does something fail to be a DOK1?
+A statement is rejected if:
+
+It is prescriptive (e.g., "Schools should do X") rather than descriptive (e.g., "60% of schools do X").
+It lacks a clear citation/source.
+It is a subjective opinion or "Spiky POV" without data backing it.
+The system then packages this into a structured JSON response, which builds the "Brainlift" you see on your dashboard.
