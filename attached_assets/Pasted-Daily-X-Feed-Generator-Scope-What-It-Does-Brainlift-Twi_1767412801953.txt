@@ -1,0 +1,175 @@
+Daily X Feed Generator — Scope
+What It Does
+Brainlift + Twitter API → Filtered Feed + DOK Summaries + Suggested Responses
+
+Core Flow
+1. USER'S BRAINLIFT
+   ↓
+   Extract key topics, facts, experts, terminology
+   ↓
+2. X/TWITTER SEARCH
+   ↓
+   Query API for relevant tweets (keywords, accounts, hashtags)
+   ↓
+3. RELEVANCE FILTER
+   ↓
+   Score each tweet against brainlift content
+   Keep only high-relevance tweets
+   ↓
+4. DOK CLASSIFICATION
+   ↓
+   DOK1: Tweet states a fact from your brainlift
+   DOK2: Tweet applies/analyzes concepts from your brainlift
+   DOK3: Tweet synthesizes or challenges your brainlift
+   DOK4: Tweet extends thinking beyond your brainlift
+   ↓
+5. RESPONSE SUGGESTIONS
+   ↓
+   Generate 1-2 reply options per tweet
+   Tone: Build network, add value, engage thoughtfully
+   ↓
+6. DAILY DELIVERY
+   ↓
+   Email / Slack / Dashboard with:
+   - Today's relevant tweets
+   - DOK level for each
+   - Suggested responses
+   - "Why this matters" based on brainlift
+
+Data Model
+javascript// Daily Feed Item
+{
+  tweet_id: "123456789",
+  author: "@educationnext",
+  author_followers: 45000,
+  content: "New research shows explicit phonics instruction...",
+  posted_at: "2026-01-02T14:30:00Z",
+  
+  // Brainlift matching
+  relevance_score: 0.87,
+  matched_facts: ["1.2", "2.3"],
+  matched_topics: ["explicit instruction", "phonics"],
+  
+  // DOK classification
+  dok_level: 2,
+  dok_rationale: "Applies research findings to instruction practice",
+  
+  // Engagement
+  suggested_responses: [
+    "This aligns with TWR's emphasis on...",
+    "Curious if this controlled for..."
+  ],
+  engagement_priority: "high", // based on author reach + relevance
+  
+  // Why it matters
+  brainlift_connection: "Directly supports Fact 1.2 on explicit instruction"
+}
+```
+
+---
+
+### What You Need to Build
+
+| Component | Description | Complexity |
+|-----------|-------------|------------|
+| **Brainlift Parser** | Extract topics, facts, experts, keywords from graded brainlift | Medium |
+| **X API Integration** | Search tweets, get user timelines, track hashtags | Medium (API limits) |
+| **Relevance Scorer** | Match tweets against brainlift content | Medium |
+| **DOK Classifier** | Categorize tweet by depth of knowledge | Low (prompt-based) |
+| **Response Generator** | Suggest replies that build network | Low (prompt-based) |
+| **Daily Digest Builder** | Compile and format output | Low |
+| **Delivery System** | Email/Slack/Dashboard | Low |
+
+---
+
+### MVP Version (Ship in Days)
+
+**Input:**
+- One brainlift (JSON or markdown)
+- List of X accounts to follow
+- List of hashtags/keywords to track
+
+**Process:**
+- Nightly cron job
+- Pull tweets from last 24 hours
+- Filter by relevance to brainlift
+- Classify DOK level
+- Generate response suggestions
+
+**Output:**
+- Email with 10-15 most relevant tweets
+- Each tweet shows: DOK level, why it matters, suggested reply
+
+---
+
+### Sample Output
+```
+═══════════════════════════════════════════════════
+DAILY FEED: AlphaWrite Brainlift
+January 3, 2026 • 12 relevant tweets found
+═══════════════════════════════════════════════════
+
+🔵 DOK2 | HIGH PRIORITY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+@NatWexler • 4,232 followers • 6h ago
+
+"Teachers often assign writing without teaching it. 
+The sentence is where instruction should begin."
+
+📎 Matches: Fact 2.1 (explicit instruction), Fact 2.4 (sentence-level)
+💡 Why it matters: Core TWR principle from your brainlift
+
+Suggested replies:
+→ "This is the heart of TWR. We've seen [specific result] 
+   when teachers start at sentence level."
+→ "Curious how you see this intersecting with content 
+   knowledge building?"
+
+[Open Tweet] [Draft Reply] [Skip]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🟢 DOK1 | MEDIUM PRIORITY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+@EducationNext • 89,421 followers • 12h ago
+
+"Louisiana jumps from 49th to 32nd in reading. 
+Science of Reading implementation cited as key factor."
+
+📎 Matches: Fact 3.1 (SoR implementation)
+💡 Why it matters: Evidence for systematic approach
+
+Suggested replies:
+→ "The Louisiana story is remarkable. Key question: 
+   how are they handling writing alongside decoding?"
+→ [Like + Retweet only - factual post, low reply value]
+
+[Open Tweet] [Draft Reply] [Skip]
+```
+
+---
+
+### Tech Stack Options
+
+**Option A: Full MCP (like Arthur)**
+```
+Claude Code + X MCP + Brainlift MCP
+- Most powerful
+- Runs locally
+- Real-time queries
+```
+
+**Option B: Scheduled Pipeline**
+```
+Cron job → X API → Claude API → Email
+- Simpler
+- Hosted (Replit, Supabase Edge Functions)
+- Daily batch
+```
+
+**Option C: Integration with DOK1 Grader**
+```
+Add to existing Replit app
+- New tab: "Daily Feed"
+- Uses already-graded brainlift
+- Shows feed in same UI

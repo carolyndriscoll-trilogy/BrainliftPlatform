@@ -1,0 +1,488 @@
+Main List Page — Current Problems
+IssueProblemToo narrowCards don't fill the spaceNo status indicatorCan't tell graded vs ungraded at a glanceNo score previewHave to click in to see mean score"0 facts" cardLooks same as valid brainliftsPlain cardsNo visual hierarchy or hover feedbackStats as textFacts/contradictions should be badgesNo dateWhen was it last updated?
+
+Full CSS Fix
+css/* ========================================
+   MAIN LIST PAGE - BRAINLIFT CARDS
+   ======================================== */
+
+/* Page Container */
+.brainlift-list-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 32px;
+}
+
+/* Page Header */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+  padding-bottom: 20px;
+  border-bottom: 3px solid #1E3A5F;
+}
+
+.page-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1E3A5F;
+  margin: 0 0 4px 0;
+}
+
+.page-header p {
+  font-size: 15px;
+  color: #6B7280;
+  margin: 0;
+}
+
+.btn-add-brainlift {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: #1E3A5F;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-add-brainlift:hover {
+  background: #2D4A6F;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(30, 58, 95, 0.2);
+}
+
+/* Cards Grid */
+.brainlift-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 20px;
+}
+
+/* Individual Card */
+.brainlift-card {
+  background: white;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.brainlift-card:hover {
+  border-color: #0D9488;
+  box-shadow: 0 4px 16px rgba(13, 148, 136, 0.12);
+  transform: translateY(-2px);
+}
+
+/* Status Badge - Top Right */
+.card-status {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.card-status.graded {
+  background: #ECFDF5;
+  color: #059669;
+  border: 1px solid #10B981;
+}
+
+.card-status.pending {
+  background: #FEF3C7;
+  color: #B45309;
+  border: 1px solid #F59E0B;
+}
+
+.card-status.not-gradeable {
+  background: #FEE2E2;
+  color: #DC2626;
+  border: 1px solid #EF4444;
+}
+
+/* Card Header */
+.card-header {
+  margin-bottom: 12px;
+  padding-right: 80px; /* Space for status badge */
+}
+
+.card-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 6px 0;
+  line-height: 1.3;
+}
+
+.card-description {
+  font-size: 14px;
+  color: #6B7280;
+  margin: 0;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Card Meta - Author & Date */
+.card-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: #6B7280;
+}
+
+.card-author {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.author-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #E5E7EB;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: #6B7280;
+}
+
+.card-date {
+  color: #9CA3AF;
+}
+
+/* Card Stats Row */
+.card-stats {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid #F3F4F6;
+  margin-top: auto;
+}
+
+.stat-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.stat-badge.facts {
+  background: #F0FDFA;
+  color: #0D9488;
+}
+
+.stat-badge.facts .stat-number {
+  font-weight: 700;
+}
+
+.stat-badge.contradictions {
+  background: #FFF7ED;
+  color: #EA580C;
+}
+
+.stat-badge.contradictions.none {
+  background: #F3F4F6;
+  color: #6B7280;
+}
+
+/* Score Preview */
+.score-preview {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.score-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: white;
+}
+
+.score-circle.excellent {
+  background: #10B981;
+}
+
+.score-circle.good {
+  background: #0D9488;
+}
+
+.score-circle.average {
+  background: #EAB308;
+}
+
+.score-circle.poor {
+  background: #EF4444;
+}
+
+.score-label {
+  font-size: 11px;
+  color: #6B7280;
+  text-align: right;
+  line-height: 1.3;
+}
+
+/* Not Gradeable Card - Dimmed State */
+.brainlift-card.not-gradeable {
+  opacity: 0.6;
+  background: #F9FAFB;
+}
+
+.brainlift-card.not-gradeable:hover {
+  opacity: 0.8;
+  border-color: #D1D5DB;
+  box-shadow: none;
+  transform: none;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 60px 24px;
+  background: #F9FAFB;
+  border-radius: 12px;
+  border: 2px dashed #E5E7EB;
+}
+
+.empty-state-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.empty-state h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1E3A5F;
+  margin: 0 0 8px 0;
+}
+
+.empty-state p {
+  font-size: 14px;
+  color: #6B7280;
+  margin: 0 0 20px 0;
+}
+
+Updated HTML Structure
+html<div class="brainlift-list-page">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <h1>DOK1 GRADING</h1>
+      <p>Select a brainlift to grade</p>
+    </div>
+    <button class="btn-add-brainlift">
+      + Add Brainlift
+    </button>
+  </div>
+
+  <!-- Cards Grid -->
+  <div class="brainlift-grid">
+
+    <!-- Card 1: Graded -->
+    <div class="brainlift-card" onclick="openBrainlift('1')">
+      <span class="card-status graded">✓ Graded</span>
+      
+      <div class="card-header">
+        <h3 class="card-title">Knowledge Rich Curriculum</h3>
+        <p class="card-description">DOK1 Grading - Knowledge Rich Curriculum Brainlift Analysis</p>
+      </div>
+      
+      <div class="card-meta">
+        <div class="card-author">
+          <span class="author-avatar">FM</span>
+          <span>Fiorella Mendez Boffano</span>
+        </div>
+        <span class="card-date">Dec 28</span>
+      </div>
+      
+      <div class="card-stats">
+        <span class="stat-badge facts">
+          <span class="stat-number">15</span> facts
+        </span>
+        <span class="stat-badge contradictions none">
+          0 contradictions
+        </span>
+        <div class="score-preview">
+          <div>
+            <div class="score-label">Mean<br>Score</div>
+          </div>
+          <div class="score-circle excellent">4.9</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2: Has Contradictions -->
+    <div class="brainlift-card" onclick="openBrainlift('2')">
+      <span class="card-status graded">✓ Graded</span>
+      
+      <div class="card-header">
+        <h3 class="card-title">Alpha Schools</h3>
+        <p class="card-description">DOK1 Grading - Alpha Schools Brainlift Analysis</p>
+      </div>
+      
+      <div class="card-meta">
+        <div class="card-author">
+          <span class="author-avatar">EN</span>
+          <span>Eric Nelson</span>
+        </div>
+        <span class="card-date">Dec 30</span>
+      </div>
+      
+      <div class="card-stats">
+        <span class="stat-badge facts">
+          <span class="stat-number">20</span> facts
+        </span>
+        <span class="stat-badge contradictions">
+          ⚠️ 6 contradictions
+        </span>
+        <div class="score-preview">
+          <div>
+            <div class="score-label">Mean<br>Score</div>
+          </div>
+          <div class="score-circle good">4.2</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3: Not Gradeable -->
+    <div class="brainlift-card not-gradeable" onclick="openBrainlift('3')">
+      <span class="card-status not-gradeable">✗ Not Gradeable</span>
+      
+      <div class="card-header">
+        <h3 class="card-title">Direct Instruction Design Manual</h3>
+        <p class="card-description">DOK1 Assessment - Direct Instruction Design Manual</p>
+      </div>
+      
+      <div class="card-meta">
+        <div class="card-author">
+          <span class="author-avatar">ZG</span>
+          <span>Zach Groshell</span>
+        </div>
+        <span class="card-date">Dec 15</span>
+      </div>
+      
+      <div class="card-stats">
+        <span class="stat-badge facts" style="background: #FEE2E2; color: #DC2626;">
+          <span class="stat-number">0</span> facts
+        </span>
+        <span class="stat-badge contradictions none">
+          0 contradictions
+        </span>
+      </div>
+    </div>
+
+    <!-- Card 4: Pending -->
+    <div class="brainlift-card" onclick="openBrainlift('4')">
+      <span class="card-status pending">⏳ Pending</span>
+      
+      <div class="card-header">
+        <h3 class="card-title">Applying How Vocabulary is Learned</h3>
+        <p class="card-description">DOK1 Assessment - Applying principles from vocabulary research to educational programming</p>
+      </div>
+      
+      <div class="card-meta">
+        <div class="card-author">
+          <span class="author-avatar">MS</span>
+          <span>Marcello Sgambelluri</span>
+        </div>
+        <span class="card-date">Jan 2</span>
+      </div>
+      
+      <div class="card-stats">
+        <span class="stat-badge facts">
+          <span class="stat-number">25</span> facts
+        </span>
+        <span class="stat-badge contradictions none">
+          0 contradictions
+        </span>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+```
+
+---
+
+## Replit AI Prompt
+```
+Redesign the main brainlift list page:
+
+1. PAGE WIDTH: max-width 1200px, padding 24px 32px
+
+2. CARDS GRID: 
+   - Use CSS grid with auto-fill, minmax(360px, 1fr)
+   - Gap of 20px between cards
+
+3. CARD STRUCTURE:
+   - White background, 1px border #E5E7EB, 12px border-radius
+   - 20px padding
+   - Hover: teal border #0D9488, subtle shadow, lift up 2px
+
+4. STATUS BADGE (top right corner):
+   - "✓ Graded": green background #ECFDF5, text #059669
+   - "⏳ Pending": yellow background #FEF3C7, text #B45309
+   - "✗ Not Gradeable": red background #FEE2E2, text #DC2626
+
+5. CARD CONTENT:
+   - Title: 18px bold
+   - Description: 14px gray, max 2 lines with ellipsis
+   - Author with avatar initials circle
+   - Date updated
+
+6. STATS ROW at bottom:
+   - Facts count: teal badge
+   - Contradictions: orange badge (gray if 0)
+   - Score preview: circle with mean score on right side
+
+7. SCORE CIRCLE colors:
+   - 4.5+: green #10B981
+   - 4.0-4.4: teal #0D9488
+   - 3.0-3.9: yellow #EAB308
+   - Below 3: red #EF4444
+
+8. NOT GRADEABLE CARDS:
+   - 60% opacity
+   - Gray background #F9FAFB
+   - Muted hover effect
+
+9. Add click handler to navigate to brainlift detail page
+
+Visual Comparison
+BeforeAfterNarrow cards, wasted spaceGrid fills available widthNo status indicatorBadge in top right cornerCan't see scoresScore circle previewPlain text statsColored stat badgesNo author avatarsInitials avatarNo datesLast updated shownAll cards look sameNot-gradeable is dimmed
+
+Want me to tackle the Add Brainlift modal next, or any other page?

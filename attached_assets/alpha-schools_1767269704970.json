@@ -1,0 +1,65 @@
+{
+  "title": "Alpha Schools",
+  "description": "DOK1 Grading - Alpha Schools Brainlift Analysis",
+  "author": "Eric Nelson",
+  "summary": {
+    "totalFacts": 20,
+    "meanScore": "4.17",
+    "score5Count": 10,
+    "contradictionCount": 6
+  },
+  "facts": [
+    { "id": "1", "category": "Regulatory", "fact": "FERPA requires explicit parental consent for student data collection", "score": 5, "contradicts": null, "source": "U.S. DOE Student Privacy Office", "note": "studentprivacy.ed.gov - FERPA requires written parental consent before disclosing PII" },
+    { "id": "2", "category": "Regulatory", "fact": "COPPA mandates safeguards for children under 13", "score": 5, "contradicts": null, "source": "FTC COPPA Guide, 2024", "note": "Requires verifiable parental consent for children under 13; now includes biometric data" },
+    { "id": "3", "category": "Regulatory", "fact": "CIPA mandates internet safety for E-Rate recipients", "score": 5, "contradicts": null, "source": "E-Rate Program Requirements", "note": "CIPA internet safety filters required for E-Rate funded schools" },
+    { "id": "4", "category": "External Benchmarks", "fact": "National SAT average near 1024", "score": 5, "contradicts": null, "source": "College Board SAT Data", "note": "Alpha HS SAT average 1410 vs national average 1024" },
+    { "id": "5", "category": "External Benchmarks", "fact": "Less than 40% of students at grade level", "score": 5, "contradicts": null, "source": "NAEP Assessment Data", "note": "National Assessment of Educational Progress reports less than 40% proficiency" },
+    { "id": "6", "category": "Research", "fact": "Bloom's Two Sigma: 1:1 tutoring yields 2 SD improvement", "score": 5, "contradicts": null, "source": "ResearchGate: Benjamin S. Bloom", "note": "researchgate.net/publication/232562212 - Two Sigma Problem demonstrates mastery learning yields 2 SD gains" },
+    { "id": "7", "category": "Research", "fact": "Cognitive Load Theory - germane load optimization", "score": 5, "contradicts": null, "source": "UNSW Research: John Sweller", "note": "research.unsw.edu.au - CLT optimizes germane cognitive load for schema construction" },
+    { "id": "8", "category": "Research", "fact": "Zone of Proximal Development framework", "score": 5, "contradicts": null, "source": "Vygotsky Educational Psychology", "note": "Zone of Proximal Development - learning with scaffolded support" },
+    { "id": "9", "category": "Louisiana", "fact": "Louisiana 4th grade reading exceeded pre-pandemic levels", "score": 5, "contradicts": null, "source": "Louisiana DOE Data", "note": "Louisiana 4th grade reading scores exceeded pre-pandemic levels" },
+    { "id": "10", "category": "Louisiana", "fact": "Louisiana improved from 49th in state rankings", "score": 5, "contradicts": null, "source": "Louisiana DOE Rankings", "note": "Louisiana improved from 49th to higher state rankings through curriculum reforms" },
+    { "id": "6.1", "category": "Alpha Internal", "fact": "2.4-2.6× growth on NWEA MAP assessments", "score": 4, "contradicts": "Learning Velocity Cluster", "source": "NWEA MAP Assessments", "note": "Alpha Schools internal data - nationally normed assessment results" },
+    { "id": "7.1", "category": "Alpha Internal", "fact": "2× faster learning than traditional schools", "score": 4, "contradicts": "Learning Velocity Cluster", "source": "Alpha Schools Internal Data", "note": "Based on NWEA MAP assessment comparison with traditional schools" },
+    { "id": "7.2", "category": "Alpha Internal", "fact": "3 grade levels mastery per week", "score": 4, "contradicts": "Learning Velocity Cluster", "source": "Alpha Session 2 Overview", "note": "In core subjects, students cover grade levels in 6 weeks vs 18 weeks" },
+    { "id": "7.3", "category": "Alpha Internal", "fact": "3× more learning Session 1 to Session 2", "score": 4, "contradicts": "Learning Velocity Cluster", "source": "Alpha Session 2 Overview", "note": "Session 1 to Session 2: 47 grade levels weekly to 140 grade levels weekly" },
+    { "id": "8.2", "category": "Alpha Internal", "fact": "SAT average 1410 (vs national 1024)", "score": 4, "contradicts": null, "source": "College Board SAT Data", "note": "Alpha High School SAT average 1410 and climbing vs national 1024" },
+    { "id": "8.1", "category": "Alpha Internal", "fact": "90% of students love school", "score": 4, "contradicts": "Satisfaction Cluster", "source": "Alpha Internal Survey", "note": "90% of Alpha High School students love school - student satisfaction data" },
+    { "id": "5.3", "category": "Alpha Internal", "fact": "Teacher retention exceeds 85%", "score": 3, "contradicts": null, "source": "Alpha HR Data", "note": "Teacher retention exceeds 85% - internal HR metrics" },
+    { "id": "4.4", "category": "External Benchmarks", "fact": "Over 40% chronically absent nationally", "score": 3, "contradicts": null, "source": "Attendance Works National Data", "note": "Over 40% chronic absenteeism nationally - post-pandemic attendance crisis" },
+    { "id": "5.1", "category": "Alpha Internal", "fact": "4× faster procurement, 60% higher renewal", "score": 3, "contradicts": null, "source": "Digital Promise 2024; RAND 2023", "note": "K-12 adoption research: ease of use and interoperability determine purchasing decisions" },
+    { "id": "5.2", "category": "Alpha Internal", "fact": "World's most talked-about learning model", "score": 3, "contradicts": null, "source": "Alpha Schools Marketing", "note": "Growing rapidly toward 25+ campuses and millions of learners" }
+  ],
+  "contradictionClusters": [
+    {
+      "name": "Learning Velocity",
+      "factIds": ["6.1", "7.1", "7.2", "7.3"],
+      "claims": ["2.4-2.6× MAP growth", "2× faster learning", "3 grade levels/week", "3× Session 1→2"],
+      "tension": "Multiple different multipliers for same outcome",
+      "status": "Flagged"
+    },
+    {
+      "name": "Student Satisfaction",
+      "factIds": ["8.1"],
+      "claims": ["90% love school", "vs. 1191% high drift data", "Guide says 'waste of time'"],
+      "tension": "Survey data conflicts with behavioral data",
+      "status": "Flagged"
+    }
+  ],
+  "readingList": [
+    { "id": 1, "type": "Twitter", "author": "@dylanwiliam", "topic": "Growth mindset effect sizes 0.01-0.065", "time": "3 min", "facts": "Research methodology", "url": "https://x.com/dylanwiliam/status/1967033562483618132" },
+    { "id": 2, "type": "Twitter", "author": "@greg_ashman", "topic": "Cognitive Load Theory book discussion", "time": "2 min", "facts": "CLT framework", "url": "https://x.com/greg_ashman/status/1673657889738203136" },
+    { "id": 3, "type": "Twitter", "author": "@LeadingReport", "topic": "MS/LA NAEP scores surpass NY/CA", "time": "2 min", "facts": "Louisiana results", "url": "https://x.com/LeadingReport/status/1916637435028512930" },
+    { "id": 4, "type": "Twitter", "author": "@cadebrumley", "topic": "Louisiana academic progress", "time": "2 min", "facts": "Louisiana context", "url": "https://x.com/cadebrumley/status/1898032043537146323" },
+    { "id": 5, "type": "Twitter", "author": "@greg_ashman", "topic": "Marking waste of time, immediate feedback", "time": "3 min", "facts": "Feedback research", "url": "https://x.com/greg_ashman/status/1882880562018590858" },
+    { "id": 6, "type": "Twitter", "author": "@NORCNews", "topic": "AI tutoring high-dose research", "time": "3 min", "facts": "Tutoring efficacy", "url": "https://x.com/NORCNews/status/1772640041103241420" },
+    { "id": 7, "type": "Substack", "author": "Freddie deBoer", "topic": "Education Doesn't Work 2.0 - meta-analysis", "time": "8 min", "facts": "Intervention effects", "url": "https://freddiedeboer.substack.com/p/education-doesnt-work-20" },
+    { "id": 8, "type": "Substack", "author": "Freddie deBoer", "topic": "90% variance is student-side", "time": "6 min", "facts": "EdTech limits", "url": "https://freddiedeboer.substack.com/p/at-the-other-end-of-your-educational" },
+    { "id": 9, "type": "Substack", "author": "Natalie Wexler", "topic": "What Nobody Is Saying About NAEP", "time": "5 min", "facts": "Knowledge vs phonics", "url": "https://nataliewexler.substack.com/p/what-nobody-is-saying-about-the-naep" },
+    { "id": 10, "type": "Substack", "author": "Greg Ashman", "topic": "Filling the Pail - explicit instruction", "time": "6 min", "facts": "CLT application", "url": "https://fillingthepail.substack.com/" },
+    { "id": 11, "type": "Blog", "author": "Peter Naimoli", "topic": "Alpha School 2x Learning - statistical critique", "time": "7 min", "facts": "Methodology critique", "url": "https://naimoli.com/peter/posts/2xlearning/" },
+    { "id": 12, "type": "Blog", "author": "Astral Codex Ten", "topic": "Your Review: Alpha School - parent analysis", "time": "10 min", "facts": "Real-world experience", "url": "https://www.astralcodexten.com/p/your-review-alpha-school" },
+    { "id": 13, "type": "Research", "author": "Education Next", "topic": "Two-Sigma Tutoring: Separating Fact from Fiction", "time": "5 min", "facts": "Bloom debunked", "url": "https://www.educationnext.org/two-sigma-tutoring-separating-science-fiction-from-science-fact/" },
+    { "id": 14, "type": "Research", "author": "EEF Toolkit", "topic": "Mastery Learning +5 months evidence", "time": "3 min", "facts": "Mastery evidence", "url": "https://educationendowmentfoundation.org.uk/education-evidence/teaching-learning-toolkit/mastery-learning" }
+  ]
+}

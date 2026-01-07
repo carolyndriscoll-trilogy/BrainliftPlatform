@@ -1,0 +1,206 @@
+FINAL COLOR SYSTEM — PALETTE A (Midnight Indigo)
+1. Global Tokens (authoritative)
+
+Use only these tokens everywhere. No ad-hoc colors.
+
+:root {
+  /* Surfaces */
+  --bg: #F7F9FC;
+  --surface: #FFFFFF;
+  --surface-alt: #F1F5F9;
+  --border: #E2E8F0;
+
+  /* Text */
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
+  --text-muted: #94A3B8;
+
+  /* Brand */
+  --primary: #1E3A8A;
+  --primary-hover: #1D4ED8;
+  --primary-soft: #E0E7FF;
+
+  --secondary: #0F766E;
+  --secondary-soft: #CCFBF1;
+
+  /* States */
+  --success: #16A34A;
+  --success-soft: #DCFCE7;
+
+  --warning: #D97706;
+  --warning-soft: #FFEDD5;
+
+  --danger: #DC2626;
+  --danger-soft: #FEE2E2;
+
+  --info: #0284C7;
+  --info-soft: #E0F2FE;
+}
+
+2. Exact Mapping to Your Current Screens
+A. Top App Header
+
+Current issue: visually flat and does not signal “analysis environment.”
+
+New
+
+Background: --surface
+
+Bottom border: 1px solid var(--border)
+
+Title text: --text-primary
+
+Subtext (brainlift subtitle): --text-secondary
+
+Active section indicator (thin line): --primary
+
+Result: feels like Notion + Bloomberg rather than a dashboard toy.
+
+B. Primary Navigation Tabs
+
+(Fact Grading, Contradictions, Reading List)
+
+Inactive
+
+Text: --text-secondary
+
+Hover: text --primary
+
+Active
+
+Text: --primary
+
+Bottom border: 2px solid var(--primary)
+
+Background: transparent
+
+Do not fill the tab background. Underlines signal seriousness.
+
+C. Brainlift Status Pills
+
+These are working well conceptually but need tonal restraint.
+
+Label	Background	Text
+BRAINLIFT	--success-soft	--success
+NOT A BRAINLIFT	--danger-soft	--danger
+Flagged	--warning-soft	--warning
+
+Add border-radius: 999px and slightly increase font-weight.
+
+D. Fact Grading Table
+
+This is your core artifact. It must feel authoritative.
+
+Table
+
+Header background: --primary
+
+Header text: #FFFFFF
+
+Row borders: --border
+
+Row hover: --surface-alt
+
+Fact text
+
+Primary claim: --text-primary
+
+Source line: --text-muted
+
+Score chips
+
+Score	BG	Text
+5	--success-soft	--success
+4	--info-soft	--info
+3	--warning-soft	--warning
+2	--warning-soft	--warning
+1	--danger-soft	--danger
+
+Important: scores must be quiet, not celebratory.
+
+E. Contradiction Clusters
+
+This is where the product becomes differentiated.
+
+Cluster container
+
+Background: --warning-soft
+
+Border-left: 4px solid var(--warning)
+
+Title text: --text-primary
+
+Fact IDs
+
+Background: --surface
+
+Border: --border
+
+Text: --text-secondary
+
+This signals intellectual tension, not error.
+
+F. Reading List Cards
+
+Card
+
+Background: --surface
+
+Border: --border
+
+Hover: --surface-alt
+
+Metadata
+
+Platform label (Twitter, Substack): --info-soft + --info
+
+Read time: --text-muted
+
+Grade button
+
+Default: --primary-soft + --primary
+
+Hover: --primary + white text
+
+G. Buttons (Important Discipline)
+
+You currently have too many visually “primary” buttons.
+
+Primary Only
+
+Import & Analyze
+
+Save Grade
+
+Add Resource
+
+Everything else is secondary or ghost.
+
+Type	BG	Text
+Primary	--primary	White
+Primary Hover	--primary-hover	White
+Secondary	--primary-soft	--primary
+Ghost	Transparent	--text-secondary
+
+This immediately reduces cognitive noise.
+
+3. Small Refinements That Matter
+Use color to encode meaning, not decoration
+
+Blue = navigation / structure
+
+Green = verified
+
+Amber = tension
+
+Red = invalid
+
+Never mix semantics.
+
+Reduce saturation on analytics screens
+
+Anything with data tables should stay mostly grayscale with small injections of color.
+
+White space > color
+
+Increase padding before adding color emphasis.

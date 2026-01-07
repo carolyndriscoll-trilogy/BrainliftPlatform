@@ -1,0 +1,142 @@
+Table Header Issues
+ProblemWhat's WrongColumns not distributedHuge empty space on the right"Fact (as written)" too narrowShould take more space"Verification Notes" crampedNeeds the most spaceUnbalanced widthsDoesn't match content below
+
+Fix — Proper Column Widths
+css/* ========================================
+   FACT GRADING TABLE - HEADER FIX
+   ======================================== */
+
+/* Table Container */
+.fact-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed; /* KEY: Forces columns to respect widths */
+}
+
+/* Header Row */
+.fact-table thead tr {
+  background: #1E3A5F;
+}
+
+.fact-table th {
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 14px 16px;
+  text-align: left;
+  border: none;
+}
+
+/* FIXED COLUMN WIDTHS */
+.fact-table th:nth-child(1),
+.fact-table td:nth-child(1) {
+  width: 70px;           /* Fact ID - narrow */
+  text-align: center;
+}
+
+.fact-table th:nth-child(2),
+.fact-table td:nth-child(2) {
+  width: 30%;            /* Fact (as written) - medium */
+}
+
+.fact-table th:nth-child(3),
+.fact-table td:nth-child(3) {
+  width: 120px;          /* Correctness - fixed */
+  text-align: center;
+}
+
+.fact-table th:nth-child(4),
+.fact-table td:nth-child(4) {
+  width: auto;           /* Verification Notes - takes remaining */
+}
+
+/* Center the Correctness header text */
+.fact-table th:nth-child(3) {
+  text-align: center;
+}
+
+/* Body cells */
+.fact-table td {
+  padding: 16px;
+  border-bottom: 1px solid #E5E7EB;
+  vertical-align: top;
+  font-size: 14px;
+  color: #374151;
+}
+
+/* Rounded corners on header */
+.fact-table thead tr th:first-child {
+  border-radius: 10px 0 0 0;
+}
+
+.fact-table thead tr th:last-child {
+  border-radius: 0 10px 0 0;
+}
+
+If Using Flexbox/Grid Instead of Table
+css/* Header row as grid */
+.table-header {
+  display: grid;
+  grid-template-columns: 70px 1fr 120px 1.5fr;
+  background: #1E3A5F;
+  border-radius: 10px 10px 0 0;
+}
+
+.table-header-cell {
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 14px 16px;
+}
+
+/* Center Fact ID */
+.table-header-cell:nth-child(1) {
+  text-align: center;
+}
+
+/* Center Correctness */
+.table-header-cell:nth-child(3) {
+  text-align: center;
+}
+
+/* Data rows - SAME grid */
+.table-row {
+  display: grid;
+  grid-template-columns: 70px 1fr 120px 1.5fr;
+  border-bottom: 1px solid #E5E7EB;
+}
+```
+
+---
+
+## Replit AI Prompt
+```
+Fix the Fact Grading table header alignment:
+
+1. Add table-layout: fixed to the table to enforce column widths
+
+2. Set these exact column widths:
+   - Column 1 (Fact ID): 70px, center-aligned
+   - Column 2 (Fact as written): 30%
+   - Column 3 (Correctness): 120px, center-aligned  
+   - Column 4 (Verification Notes): auto (takes remaining space)
+
+3. Make sure the body rows use the SAME column widths as the header
+
+4. If using CSS grid instead of table:
+   grid-template-columns: 70px 1fr 120px 1.5fr
+
+5. Add border-radius: 10px 10px 0 0 to the header row
+
+6. Header padding: 14px 16px
+```
+
+---
+
+## Expected Result
+```
+|  Fact ID  |    Fact (as written)    | Correctness |      Verification Notes        |
+|   70px    |          30%            |    120px    |        remaining space         |
+|  center   |          left           |   center    |             left               |
+All columns should now align with the content below and use the full width properly.

@@ -1,0 +1,358 @@
+Grade Panel — Current Problems
+IssueProblemGray barLooks disconnected, like a footerTiny dropdownsHard to read and click"-" placeholderUnclear what to selectCramped layoutAll squeezed in one rowNo contextWhat do these fields mean?No visual feedbackCan't see at a glance if graded
+
+Redesigned Grade Panel CSS
+css/* ========================================
+   GRADE PANEL - REDESIGNED
+   ======================================== */
+
+/* Grade Panel Container */
+.grade-panel {
+  background: #F9FAFB;
+  border-top: 1px solid #E5E7EB;
+  border-radius: 0 0 12px 12px;
+  padding: 20px;
+  margin: 16px -20px -20px -20px;  /* Bleed to card edges */
+}
+
+/* Grade Fields Grid */
+.grade-fields {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr) auto;
+  gap: 16px;
+  align-items: end;
+}
+
+@media (max-width: 768px) {
+  .grade-fields {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Individual Field */
+.grade-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.grade-field label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6B7280;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+/* Custom Select Dropdown */
+.grade-select {
+  appearance: none;
+  background: white;
+  border: 1px solid #D1D5DB;
+  border-radius: 8px;
+  padding: 10px 36px 10px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  /* Custom arrow */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+
+.grade-select:hover {
+  border-color: #0D9488;
+}
+
+.grade-select:focus {
+  outline: none;
+  border-color: #0D9488;
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
+}
+
+/* Placeholder style */
+.grade-select option[value=""] {
+  color: #9CA3AF;
+}
+
+/* Selected state colors */
+.grade-select.selected-yes {
+  background-color: #ECFDF5;
+  border-color: #10B981;
+  color: #059669;
+}
+
+.grade-select.selected-no {
+  background-color: #FEF2F2;
+  border-color: #EF4444;
+  color: #DC2626;
+}
+
+.grade-select.selected-partial {
+  background-color: #FFFBEB;
+  border-color: #F59E0B;
+  color: #B45309;
+}
+
+/* Quality Rating - Special styling */
+.grade-field.quality-field .grade-select {
+  min-width: 80px;
+}
+
+/* Save Button */
+.btn-save-grade {
+  padding: 10px 24px;
+  background: #0D9488;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-save-grade:hover {
+  background: #0F766E;
+}
+
+.btn-save-grade:disabled {
+  background: #D1D5DB;
+  cursor: not-allowed;
+}
+
+/* Saved State Indicator */
+.grade-saved {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #059669;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.grade-saved::before {
+  content: "✓";
+}
+
+Updated HTML Structure
+html<!-- Inside source-card, after source-footer -->
+
+<div class="grade-panel">
+  <div class="grade-fields">
+    
+    <!-- Aligns? -->
+    <div class="grade-field">
+      <label>Aligns with facts?</label>
+      <select class="grade-select">
+        <option value="">Select...</option>
+        <option value="yes">✓ Yes</option>
+        <option value="partial">◐ Partially</option>
+        <option value="no">✗ No</option>
+      </select>
+    </div>
+    
+    <!-- Contradicts? -->
+    <div class="grade-field">
+      <label>Contradicts any?</label>
+      <select class="grade-select">
+        <option value="">Select...</option>
+        <option value="none">None</option>
+        <option value="minor">Minor tension</option>
+        <option value="major">Major conflict</option>
+      </select>
+    </div>
+    
+    <!-- New Info? -->
+    <div class="grade-field">
+      <label>New information?</label>
+      <select class="grade-select">
+        <option value="">Select...</option>
+        <option value="yes">✓ Yes, novel</option>
+        <option value="some">◐ Some new</option>
+        <option value="no">✗ No, redundant</option>
+      </select>
+    </div>
+    
+    <!-- Quality -->
+    <div class="grade-field quality-field">
+      <label>Source quality</label>
+      <select class="grade-select">
+        <option value="">1-5</option>
+        <option value="5">5 - Excellent</option>
+        <option value="4">4 - Strong</option>
+        <option value="3">3 - Average</option>
+        <option value="2">2 - Weak</option>
+        <option value="1">1 - Poor</option>
+      </select>
+    </div>
+    
+    <!-- Save Button -->
+    <button class="btn-save-grade">Save</button>
+    
+  </div>
+</div>
+
+Better Option: Horizontal Pills Instead of Dropdowns
+Even cleaner — use clickable pills:
+html<div class="grade-panel">
+  
+  <!-- Aligns? -->
+  <div class="grade-row">
+    <span class="grade-label">Aligns?</span>
+    <div class="grade-pills">
+      <button class="grade-pill" data-value="yes">Yes</button>
+      <button class="grade-pill" data-value="partial">Partial</button>
+      <button class="grade-pill" data-value="no">No</button>
+    </div>
+  </div>
+  
+  <!-- Contradicts? -->
+  <div class="grade-row">
+    <span class="grade-label">Contradicts?</span>
+    <div class="grade-pills">
+      <button class="grade-pill" data-value="none">None</button>
+      <button class="grade-pill" data-value="minor">Minor</button>
+      <button class="grade-pill" data-value="major">Major</button>
+    </div>
+  </div>
+  
+  <!-- New Info? -->
+  <div class="grade-row">
+    <span class="grade-label">New info?</span>
+    <div class="grade-pills">
+      <button class="grade-pill" data-value="yes">Yes</button>
+      <button class="grade-pill" data-value="some">Some</button>
+      <button class="grade-pill" data-value="no">No</button>
+    </div>
+  </div>
+  
+  <!-- Quality -->
+  <div class="grade-row">
+    <span class="grade-label">Quality</span>
+    <div class="grade-pills quality">
+      <button class="grade-pill" data-value="1">1</button>
+      <button class="grade-pill" data-value="2">2</button>
+      <button class="grade-pill" data-value="3">3</button>
+      <button class="grade-pill" data-value="4">4</button>
+      <button class="grade-pill" data-value="5">5</button>
+    </div>
+  </div>
+  
+  <button class="btn-save-grade">Save Grade</button>
+  
+</div>
+css/* Grade Pills Layout */
+.grade-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.grade-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #6B7280;
+  min-width: 90px;
+}
+
+.grade-pills {
+  display: flex;
+  gap: 6px;
+}
+
+.grade-pill {
+  padding: 6px 14px;
+  background: white;
+  border: 1px solid #D1D5DB;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.grade-pill:hover {
+  border-color: #0D9488;
+  color: #0D9488;
+}
+
+/* Selected states */
+.grade-pill.selected {
+  background: #0D9488;
+  border-color: #0D9488;
+  color: white;
+}
+
+/* Quality pills - different colors when selected */
+.grade-pills.quality .grade-pill.selected[data-value="5"] {
+  background: #10B981;
+  border-color: #10B981;
+}
+
+.grade-pills.quality .grade-pill.selected[data-value="4"] {
+  background: #0D9488;
+  border-color: #0D9488;
+}
+
+.grade-pills.quality .grade-pill.selected[data-value="3"] {
+  background: #EAB308;
+  border-color: #EAB308;
+}
+
+.grade-pills.quality .grade-pill.selected[data-value="2"] {
+  background: #F97316;
+  border-color: #F97316;
+}
+
+.grade-pills.quality .grade-pill.selected[data-value="1"] {
+  background: #EF4444;
+  border-color: #EF4444;
+}
+```
+
+---
+
+## Replit AI Prompt
+```
+Redesign the Grade panel on source cards:
+
+1. LAYOUT: Stack the grade fields vertically instead of cramped horizontal row
+
+2. USE PILL BUTTONS instead of dropdowns:
+   - Aligns?: [Yes] [Partial] [No]
+   - Contradicts?: [None] [Minor] [Major]  
+   - New info?: [Yes] [Some] [No]
+   - Quality: [1] [2] [3] [4] [5]
+
+3. PILL STYLES:
+   - Default: white background, gray border #D1D5DB, rounded-full
+   - Hover: teal border #0D9488
+   - Selected: teal background #0D9488, white text
+
+4. QUALITY PILLS: When selected, color by value:
+   - 5: green #10B981
+   - 4: teal #0D9488
+   - 3: yellow #EAB308
+   - 2: orange #F97316
+   - 1: red #EF4444
+
+5. SAVE BUTTON: 
+   - Teal background #0D9488
+   - Full width at bottom of panel
+   - Show "✓ Saved" state after saving
+
+6. PANEL BACKGROUND: 
+   - Light gray #F9FAFB
+   - Border-top 1px solid #E5E7EB
+   - Extend to edges of card (negative margin)
+
+7. Add click handler to toggle .selected class on pills
+
+Visual Comparison
+BeforeAfterTiny cramped dropdownsClear pill buttons"-" placeholder unclearObvious options to clickHorizontal squeezeVertical stack with roomNo visual feedbackPills highlight when selectedGeneric grayColor-coded quality ratings

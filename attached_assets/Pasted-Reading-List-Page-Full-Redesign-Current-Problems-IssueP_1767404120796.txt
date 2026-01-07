@@ -1,0 +1,560 @@
+Reading List Page — Full Redesign
+Current Problems
+IssueProblemNo cardsSources blend into white backgroundWeak category headers"Student Motivation" is just bold textDuplicate "Relates to"Shows under category AND under each sourceNo source type iconsBlog, Magazine, etc. are just textFlat layoutNo visual hierarchyToo narrowSame white space issue as beforeButtons floating"Open source" and "Grade" look disconnected
+
+Full CSS Fix
+css/* ========================================
+   READING LIST PAGE - COMPLETE REDESIGN
+   ======================================== */
+
+/* Page Container */
+.reading-list-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 32px;
+}
+
+/* Page Header */
+.reading-list-header {
+  margin-bottom: 32px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.reading-list-header h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1E3A5F;
+  margin: 0 0 8px 0;
+}
+
+.reading-list-header p {
+  font-size: 15px;
+  color: #6B7280;
+  margin: 0;
+}
+
+.reading-list-header .subtitle {
+  color: #0D9488;
+  font-weight: 500;
+}
+
+/* Category Section */
+.reading-category {
+  margin-bottom: 40px;
+}
+
+.category-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.category-header h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1E3A5F;
+  margin: 0;
+}
+
+.category-badge {
+  background: #F3F4F6;
+  color: #6B7280;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+
+.category-facts {
+  font-size: 13px;
+  color: #6B7280;
+  margin-bottom: 16px;
+}
+
+.category-facts a {
+  color: #0D9488;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.category-facts a:hover {
+  text-decoration: underline;
+}
+
+/* Source Cards Grid */
+.sources-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Individual Source Card */
+.source-card {
+  background: white;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.2s ease;
+}
+
+.source-card:hover {
+  border-color: #0D9488;
+  box-shadow: 0 4px 12px rgba(13, 148, 136, 0.1);
+}
+
+/* Source Header Row */
+.source-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.source-type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+/* Source Type Colors */
+.source-type-badge.blog {
+  background: #DBEAFE;
+  color: #1D4ED8;
+}
+
+.source-type-badge.magazine {
+  background: #FCE7F3;
+  color: #BE185D;
+}
+
+.source-type-badge.research {
+  background: #D1FAE5;
+  color: #047857;
+}
+
+.source-type-badge.policy {
+  background: #FEF3C7;
+  color: #B45309;
+}
+
+.source-type-badge.podcast {
+  background: #EDE9FE;
+  color: #6D28D9;
+}
+
+.source-type-badge.video {
+  background: #FEE2E2;
+  color: #DC2626;
+}
+
+.source-type-badge.twitter {
+  background: #E0F2FE;
+  color: #0284C7;
+}
+
+.source-type-badge.substack {
+  background: #FFEDD5;
+  color: #EA580C;
+}
+
+.source-meta {
+  font-size: 13px;
+  color: #6B7280;
+}
+
+.source-meta .author {
+  font-weight: 500;
+  color: #374151;
+}
+
+.source-meta .divider {
+  margin: 0 6px;
+  color: #D1D5DB;
+}
+
+.source-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: #6B7280;
+  background: #F3F4F6;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+/* Source Title */
+.source-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 8px 0;
+  line-height: 1.4;
+}
+
+/* Source Description */
+.source-description {
+  font-size: 14px;
+  color: #4B5563;
+  line-height: 1.6;
+  margin: 0 0 16px 0;
+}
+
+.source-description strong {
+  color: #374151;
+  font-weight: 600;
+}
+
+/* Source Footer */
+.source-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.source-facts {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.source-facts-label {
+  font-size: 12px;
+  color: #6B7280;
+}
+
+.fact-link {
+  background: #F0FDFA;
+  color: #0D9488;
+  border: 1px solid #99F6E4;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.fact-link:hover {
+  background: #0D9488;
+  color: white;
+  border-color: #0D9488;
+}
+
+/* Action Buttons */
+.source-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-open-source {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: #1E3A5F;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.btn-open-source:hover {
+  background: #2D4A6F;
+}
+
+.btn-grade {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: white;
+  color: #374151;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-grade:hover {
+  border-color: #0D9488;
+  color: #0D9488;
+}
+
+/* Time Estimate Summary */
+.reading-summary {
+  display: flex;
+  gap: 24px;
+  padding: 16px 20px;
+  background: #F9FAFB;
+  border-radius: 8px;
+  margin-bottom: 32px;
+}
+
+.summary-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.summary-icon {
+  font-size: 18px;
+}
+
+.summary-label {
+  font-size: 13px;
+  color: #6B7280;
+}
+
+.summary-value {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1E3A5F;
+}
+
+Full HTML Structure
+html<div class="reading-list-page">
+
+  <!-- Page Header -->
+  <div class="reading-list-header">
+    <h2>Reading List</h2>
+    <p>Sources selected to support, challenge, or contextualize the DOK1 fact base.</p>
+    <p class="subtitle">Read selectively. Grade alignment only after review.</p>
+  </div>
+
+  <!-- Summary Stats -->
+  <div class="reading-summary">
+    <div class="summary-item">
+      <span class="summary-icon">📚</span>
+      <span class="summary-label">Total sources:</span>
+      <span class="summary-value">10</span>
+    </div>
+    <div class="summary-item">
+      <span class="summary-icon">⏱️</span>
+      <span class="summary-label">Est. reading time:</span>
+      <span class="summary-value">~70 min</span>
+    </div>
+    <div class="summary-item">
+      <span class="summary-icon">✅</span>
+      <span class="summary-label">Graded:</span>
+      <span class="summary-value">0/10</span>
+    </div>
+  </div>
+
+  <!-- Category: Student Motivation -->
+  <div class="reading-category">
+    <div class="category-header">
+      <h3>Student Motivation</h3>
+      <span class="category-badge">2 sources</span>
+    </div>
+    <p class="category-facts">
+      Relates to Facts: 
+      <a href="#fact-1.1">1.1</a>, 
+      <a href="#fact-2.1">2.1</a>
+    </p>
+
+    <div class="sources-grid">
+      
+      <!-- Source Card 1 -->
+      <div class="source-card">
+        <div class="source-header">
+          <span class="source-type-badge blog">📝 Blog</span>
+          <span class="source-meta">
+            <span class="author">Larry Ferlazzo</span>
+            <span class="divider">•</span>
+            MindShift/KQED
+          </span>
+          <span class="source-time">⏱️ ~5 min</span>
+        </div>
+        
+        <h4 class="source-title">What Motivates A Student's Interest in Reading and Writing</h4>
+        
+        <p class="source-description">
+          <strong>Why this matters:</strong> Why giving students autonomy and choice in writing topics boosts engagement; cites Pew survey showing choice has 'an equally important role' in teens'...
+        </p>
+        
+        <div class="source-footer">
+          <div class="source-facts">
+            <span class="source-facts-label">Facts:</span>
+            <a href="#fact-1.1" class="fact-link">1.1</a>
+            <a href="#fact-2.1" class="fact-link">2.1</a>
+          </div>
+          <div class="source-actions">
+            <a href="#" class="btn-open-source" target="_blank">
+              Open source ↗
+            </a>
+            <button class="btn-grade">
+              Grade ▾
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Source Card 2 -->
+      <div class="source-card">
+        <div class="source-header">
+          <span class="source-type-badge blog">📝 Blog</span>
+          <span class="source-meta">
+            <span class="author">Laura Brown</span>
+            <span class="divider">•</span>
+            The Educators Room
+          </span>
+          <span class="source-time">⏱️ ~8 min</span>
+        </div>
+        
+        <h4 class="source-title">The Writing Gap: Why a Renaissance in Writing Instruction is Imperative</h4>
+        
+        <p class="source-description">
+          <strong>Why this matters:</strong> Veteran teacher's perspective on how secondary students' poor writing skills and teachers' lack of training constitute a 'writing gap'; NAEP shows onl...
+        </p>
+        
+        <div class="source-footer">
+          <div class="source-facts">
+            <span class="source-facts-label">Facts:</span>
+            <a href="#fact-1.1" class="fact-link">1.1</a>
+            <a href="#fact-2.1" class="fact-link">2.1</a>
+          </div>
+          <div class="source-actions">
+            <a href="#" class="btn-open-source" target="_blank">
+              Open source ↗
+            </a>
+            <button class="btn-grade">
+              Grade ▾
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Category: Explicit Instruction -->
+  <div class="reading-category">
+    <div class="category-header">
+      <h3>Explicit Instruction</h3>
+      <span class="category-badge">3 sources</span>
+    </div>
+    <p class="category-facts">
+      Relates to Facts: 
+      <a href="#fact-1.2">1.2</a>, 
+      <a href="#fact-2.2">2.2</a>,
+      <a href="#fact-2.3">2.3</a>,
+      <a href="#fact-2.4">2.4</a>
+    </p>
+
+    <div class="sources-grid">
+      
+      <!-- Source Card: The Atlantic -->
+      <div class="source-card">
+        <div class="source-header">
+          <span class="source-type-badge magazine">📰 Magazine</span>
+          <span class="source-meta">
+            <span class="author">Peg Tyre</span>
+            <span class="divider">•</span>
+            The Atlantic
+          </span>
+          <span class="source-time">⏱️ ~15 min</span>
+        </div>
+        
+        <h4 class="source-title">The Writing Revolution</h4>
+        
+        <p class="source-description">
+          <strong>Why this matters:</strong> The famous story of New Dorp High School's dramatic improvement by refocusing on explicit, content-based writing instruction; English Regents pass rat...
+        </p>
+        
+        <div class="source-footer">
+          <div class="source-facts">
+            <span class="source-facts-label">Facts:</span>
+            <a href="#fact-1.2" class="fact-link">1.2</a>
+            <a href="#fact-2.2" class="fact-link">2.2</a>
+            <a href="#fact-2.3" class="fact-link">2.3</a>
+            <a href="#fact-2.4" class="fact-link">2.4</a>
+          </div>
+          <div class="source-actions">
+            <a href="#" class="btn-open-source" target="_blank">
+              Open source ↗
+            </a>
+            <button class="btn-grade">
+              Grade ▾
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- More source cards... -->
+
+    </div>
+  </div>
+
+</div>
+```
+
+---
+
+## Replit AI Prompt
+
+Paste this:
+```
+Redesign the Reading List page with these changes:
+
+1. PAGE WIDTH: Set max-width to 1200px, padding 24px 32px
+
+2. PAGE HEADER: 
+   - h2 "Reading List" in navy #1E3A5F
+   - Description paragraph in gray #6B7280
+   - Subtitle "Read selectively..." in teal #0D9488
+
+3. ADD SUMMARY BAR:
+   - Gray background #F9FAFB with rounded corners
+   - Show: Total sources, Est. reading time, Graded count
+   - Icons: 📚 ⏱️ ✅
+
+4. CATEGORY SECTIONS:
+   - h3 category name with badge showing source count
+   - "Relates to Facts" with clickable teal fact links
+   - Remove duplicate "Relates to facts" from individual sources
+
+5. SOURCE CARDS:
+   - White background with #E5E7EB border
+   - 12px border radius
+   - 20px padding
+   - Hover: teal border #0D9488 with subtle shadow
+
+6. SOURCE TYPE BADGES (colored):
+   - Blog: blue background #DBEAFE, text #1D4ED8
+   - Magazine: pink background #FCE7F3, text #BE185D
+   - Research: green background #D1FAE5, text #047857
+   - Policy: yellow background #FEF3C7, text #B45309
+   - Podcast: purple background #EDE9FE, text #6D28D9
+
+7. CARD LAYOUT:
+   - Header row: type badge, author name, publication, time estimate
+   - Title: 16px bold
+   - Description: 14px gray with bold "Why this matters:"
+   - Footer: fact links on left, buttons on right
+
+8. FACT LINKS: Small teal pills that link to Fact Grading tab
+
+9. BUTTONS:
+   - "Open source": navy background #1E3A5F
+   - "Grade": white with gray border, teal on hover
+
+Visual Comparison
+BeforeAfterFlat white backgroundCards with borders and hover statesPlain text categoriesBold headers with source count badgesNo source type indicatorsColored badges (Blog, Magazine, etc.)Duplicate "Relates to"Shows only at category levelDisconnected buttonsAligned in card footerNo reading time summarySummary bar at top

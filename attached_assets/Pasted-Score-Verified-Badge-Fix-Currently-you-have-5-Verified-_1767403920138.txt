@@ -1,0 +1,231 @@
+Score + Verified Badge Fix
+Currently you have:
+    5
+ Verified
+This looks awkward — the stacked layout is clunky and takes up too much vertical space.
+
+Option A: Combined Badge (Recommended)
+Single badge that shows both score and status:
+html<div class="score-badge score-5">
+  <span class="score-number">5</span>
+  <span class="score-label">Verified</span>
+</div>
+css/* Combined Score Badge */
+.score-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.score-number {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+/* Score 5 - Green */
+.score-5 {
+  background: #ECFDF5;
+  color: #059669;
+  border: 1px solid #10B981;
+}
+
+/* Score 4 - Teal */
+.score-4 {
+  background: #F0FDFA;
+  color: #0D9488;
+  border: 1px solid #14B8A6;
+}
+
+/* Score 3 - Yellow */
+.score-3 {
+  background: #FEFCE8;
+  color: #CA8A04;
+  border: 1px solid #EAB308;
+}
+
+/* Score 2 - Orange */
+.score-2 {
+  background: #FFF7ED;
+  color: #EA580C;
+  border: 1px solid #F97316;
+}
+
+/* Score 1 - Red */
+.score-1 {
+  background: #FEF2F2;
+  color: #DC2626;
+  border: 1px solid #EF4444;
+}
+Result: [ 5 Verified ] in a green pill
+
+Option B: Score Circle + Small Label
+Visual score indicator with label below:
+html<div class="score-display">
+  <div class="score-circle score-5">5</div>
+  <span class="score-status verified">Verified</span>
+</div>
+css.score-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.score-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* Circle colors by score */
+.score-circle.score-5 {
+  background: #10B981;
+  color: white;
+}
+
+.score-circle.score-4 {
+  background: #0D9488;
+  color: white;
+}
+
+.score-circle.score-3 {
+  background: #EAB308;
+  color: white;
+}
+
+.score-circle.score-2 {
+  background: #F97316;
+  color: white;
+}
+
+.score-circle.score-1 {
+  background: #EF4444;
+  color: white;
+}
+
+/* Status label */
+.score-status {
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.score-status.verified {
+  color: #059669;
+}
+
+.score-status.mostly-verified {
+  color: #0D9488;
+}
+
+.score-status.partial {
+  color: #CA8A04;
+}
+
+.score-status.unverified {
+  color: #DC2626;
+}
+Result: Green circle with "5" inside, small "VERIFIED" text below
+
+Option C: Horizontal Score Bar (Most Modern)
+html<div class="score-bar-container">
+  <div class="score-bar">
+    <div class="score-fill score-5" style="width: 100%"></div>
+  </div>
+  <span class="score-value">5/5</span>
+</div>
+css.score-bar-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 100px;
+}
+
+.score-bar {
+  flex: 1;
+  height: 8px;
+  background: #E5E7EB;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.score-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.score-fill.score-5 { background: #10B981; }
+.score-fill.score-4 { background: #0D9488; width: 80%; }
+.score-fill.score-3 { background: #EAB308; width: 60%; }
+.score-fill.score-2 { background: #F97316; width: 40%; }
+.score-fill.score-1 { background: #EF4444; width: 20%; }
+
+.score-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+  min-width: 30px;
+}
+```
+
+**Result:** `[████████████] 5/5`
+
+---
+
+## My Recommendation: Option A
+
+The combined badge is cleanest for a table because:
+- Takes minimal space
+- Single visual element
+- Color communicates score instantly
+- Works well in narrow columns
+
+---
+
+## Full Replit Instructions (Option A)
+```
+Fix the Correctness column display:
+
+1. Replace the stacked "5" number and "Verified" badge with a single combined badge
+
+2. HTML structure:
+   <div class="score-badge score-{score}">
+     <span class="score-number">{score}</span>
+     <span class="score-label">{status}</span>
+   </div>
+
+3. Badge styles:
+   - Inline-flex with gap of 6px
+   - Padding: 6px 12px
+   - Border-radius: 20px (pill shape)
+   - Font-weight: 600
+
+4. Color coding:
+   - Score 5: Green background #ECFDF5, green text #059669, green border #10B981
+   - Score 4: Teal background #F0FDFA, teal text #0D9488, teal border #14B8A6
+   - Score 3: Yellow background #FEFCE8, yellow text #CA8A04, yellow border #EAB308
+   - Score 2: Orange background #FFF7ED, orange text #EA580C, orange border #F97316
+   - Score 1: Red background #FEF2F2, red text #DC2626, red border #EF4444
+
+5. Status labels:
+   - 5 = "Verified"
+   - 4 = "Mostly Verified"
+   - 3 = "Partial"
+   - 2 = "Weak"
+   - 1 = "Unverified"
+
+6. Center the badge in the column
+
+Quick Visual Comparison
+ScoreCurrentAfter (Option A)55 + Verified stacked[ 5 Verified ] green pill44 + Mostly Verified stacked[ 4 Mostly Verified ] teal pill33 + Partial stacked[ 3 Partial ] yellow pill

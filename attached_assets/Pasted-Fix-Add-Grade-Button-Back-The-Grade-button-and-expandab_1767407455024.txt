@@ -1,0 +1,295 @@
+Fix — Add Grade Button Back
+The "Grade" button and expandable grading panel got removed. Here's how to restore it:
+
+HTML Structure for Each Source Card
+html<div class="source-card">
+  <!-- Header, title, description... -->
+  
+  <!-- Footer with Facts + Buttons -->
+  <div class="source-footer">
+    <div class="source-facts">
+      <span class="source-facts-label">Facts:</span>
+      <a href="#fact-1.2" class="fact-link">1.2</a>
+      <a href="#fact-2.2" class="fact-link">2.2</a>
+      <a href="#fact-2.3" class="fact-link">2.3</a>
+      <a href="#fact-2.4" class="fact-link">2.4</a>
+    </div>
+    <div class="source-actions">
+      <a href="#" class="btn-open-source" target="_blank">
+        Open source ↗
+      </a>
+      <!-- ADD THIS BACK -->
+      <button class="btn-grade" onclick="toggleGradePanel(this)">
+        Grade ▾
+      </button>
+    </div>
+  </div>
+  
+  <!-- GRADE PANEL - Hidden by default, shows on click -->
+  <div class="grade-panel" style="display: none;">
+    <div class="grade-fields">
+      
+      <div class="grade-row">
+        <span class="grade-label">Aligns?</span>
+        <div class="grade-pills">
+          <button class="grade-pill" data-value="yes">Yes</button>
+          <button class="grade-pill" data-value="partial">Partial</button>
+          <button class="grade-pill" data-value="no">No</button>
+        </div>
+      </div>
+      
+      <div class="grade-row">
+        <span class="grade-label">Contradicts?</span>
+        <div class="grade-pills">
+          <button class="grade-pill" data-value="none">None</button>
+          <button class="grade-pill" data-value="minor">Minor</button>
+          <button class="grade-pill" data-value="major">Major</button>
+        </div>
+      </div>
+      
+      <div class="grade-row">
+        <span class="grade-label">New info?</span>
+        <div class="grade-pills">
+          <button class="grade-pill" data-value="yes">Yes</button>
+          <button class="grade-pill" data-value="some">Some</button>
+          <button class="grade-pill" data-value="no">No</button>
+        </div>
+      </div>
+      
+      <div class="grade-row">
+        <span class="grade-label">Quality</span>
+        <div class="grade-pills quality">
+          <button class="grade-pill" data-value="1">1</button>
+          <button class="grade-pill" data-value="2">2</button>
+          <button class="grade-pill" data-value="3">3</button>
+          <button class="grade-pill" data-value="4">4</button>
+          <button class="grade-pill" data-value="5">5</button>
+        </div>
+      </div>
+      
+      <button class="btn-save-grade">Save Grade</button>
+      
+    </div>
+  </div>
+  
+</div>
+
+CSS for Grade Button + Panel
+css/* Grade Button */
+.btn-grade {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  background: white;
+  color: #374151;
+  border: 1px solid #D1D5DB;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-grade:hover {
+  border-color: #0D9488;
+  color: #0D9488;
+}
+
+.btn-grade.active {
+  background: #F0FDFA;
+  border-color: #0D9488;
+  color: #0D9488;
+}
+
+/* Grade Panel */
+.grade-panel {
+  background: #F9FAFB;
+  border-top: 1px solid #E5E7EB;
+  border-radius: 0 0 12px 12px;
+  padding: 20px;
+  margin: 16px -20px -20px -20px;
+}
+
+/* Grade Rows */
+.grade-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.grade-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+  min-width: 90px;
+}
+
+/* Grade Pills */
+.grade-pills {
+  display: flex;
+  gap: 8px;
+}
+
+.grade-pill {
+  padding: 6px 14px;
+  background: white;
+  border: 1px solid #D1D5DB;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.grade-pill:hover {
+  border-color: #0D9488;
+  color: #0D9488;
+}
+
+.grade-pill.selected {
+  background: #0D9488;
+  border-color: #0D9488;
+  color: white;
+}
+
+/* Quality pills - color by value when selected */
+.grade-pills.quality .grade-pill.selected[data-value="5"] {
+  background: #10B981;
+  border-color: #10B981;
+}
+
+.grade-pills.quality .grade-pill.selected[data-value="4"] {
+  background: #0D9488;
+  border-color: #0D9488;
+}
+
+.grade-pills.quality .grade-pill.selected[data-value="3"] {
+  background: #EAB308;
+  border-color: #EAB308;
+}
+
+.grade-pills.quality .grade-pill.selected[data-value="2"] {
+  background: #F97316;
+  border-color: #F97316;
+}
+
+.grade-pills.quality .grade-pill.selected[data-value="1"] {
+  background: #EF4444;
+  border-color: #EF4444;
+}
+
+/* Save Button */
+.btn-save-grade {
+  width: 100%;
+  padding: 12px;
+  background: #0D9488;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: all 0.2s ease;
+}
+
+.btn-save-grade:hover {
+  background: #0F766E;
+}
+
+JavaScript for Toggle + Selection
+javascript// Toggle grade panel visibility
+function toggleGradePanel(button) {
+  const card = button.closest('.source-card');
+  const panel = card.querySelector('.grade-panel');
+  
+  if (panel.style.display === 'none') {
+    panel.style.display = 'block';
+    button.textContent = 'Grade ▴';
+    button.classList.add('active');
+  } else {
+    panel.style.display = 'none';
+    button.textContent = 'Grade ▾';
+    button.classList.remove('active');
+  }
+}
+
+// Handle pill selection
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('grade-pill')) {
+    const pillGroup = e.target.closest('.grade-pills');
+    
+    // Remove selected from siblings
+    pillGroup.querySelectorAll('.grade-pill').forEach(pill => {
+      pill.classList.remove('selected');
+    });
+    
+    // Add selected to clicked pill
+    e.target.classList.add('selected');
+  }
+});
+
+// Save grade
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('btn-save-grade')) {
+    const panel = e.target.closest('.grade-panel');
+    const card = e.target.closest('.source-card');
+    
+    // Collect values
+    const aligns = panel.querySelector('.grade-row:nth-child(1) .grade-pill.selected')?.dataset.value;
+    const contradicts = panel.querySelector('.grade-row:nth-child(2) .grade-pill.selected')?.dataset.value;
+    const newInfo = panel.querySelector('.grade-row:nth-child(3) .grade-pill.selected')?.dataset.value;
+    const quality = panel.querySelector('.grade-row:nth-child(4) .grade-pill.selected')?.dataset.value;
+    
+    console.log({ aligns, contradicts, newInfo, quality });
+    
+    // TODO: Save to your backend
+    
+    // Show saved feedback
+    e.target.textContent = '✓ Saved';
+    e.target.style.background = '#10B981';
+    
+    setTimeout(() => {
+      e.target.textContent = 'Save Grade';
+      e.target.style.background = '#0D9488';
+    }, 2000);
+  }
+});
+```
+
+---
+
+## Replit AI Prompt
+```
+The Grade button and grading panel are missing from Reading List source cards. Add them back:
+
+1. Add a "Grade ▾" button next to "Open source" in the source-actions div
+
+2. Add a hidden grade-panel div at the bottom of each source card
+
+3. Grade panel should contain 4 rows:
+   - Aligns?: [Yes] [Partial] [No] pills
+   - Contradicts?: [None] [Minor] [Major] pills
+   - New info?: [Yes] [Some] [No] pills
+   - Quality: [1] [2] [3] [4] [5] pills
+
+4. Style pills as rounded buttons:
+   - Default: white background, gray border
+   - Hover: teal border
+   - Selected: teal background, white text
+   - Quality pills: color by value (5=green, 4=teal, 3=yellow, 2=orange, 1=red)
+
+5. Add "Save Grade" button at bottom of panel (teal background)
+
+6. JavaScript:
+   - toggleGradePanel(): show/hide panel, change button to "Grade ▴" when open
+   - Click handler for pills to toggle .selected class
+   - Save handler to collect values and show "✓ Saved" feedback
+
+7. Panel styling:
+   - Light gray background #F9FAFB
+   - Border-top 1px solid #E5E7EB
+   - Negative margins to extend to card edges

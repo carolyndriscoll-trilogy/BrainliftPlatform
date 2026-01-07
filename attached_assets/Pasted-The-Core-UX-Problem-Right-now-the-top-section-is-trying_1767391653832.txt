@@ -1,0 +1,210 @@
+The Core UX Problem
+
+Right now the top section is trying to do four jobs at once:
+
+Identify the artifact
+
+Communicate its status
+
+Provide navigation
+
+Offer actions
+
+All four are visually co-equal, which creates cognitive noise.
+
+The fix is hierarchy, not removal.
+
+Target Mental Model
+
+The user should read this top section in this order, without effort:
+
+What is this artifact?
+
+What state is it in?
+
+What mode am I currently in?
+
+What can I do next?
+
+Everything below enforces that sequence.
+
+Step 1: Separate Identity from Controls
+A. Artifact Identity Block (left-aligned, dominant)
+
+Keep
+
+Title
+
+Subtitle
+
+Author
+
+Change
+
+Increase vertical spacing
+
+Remove all buttons from this visual zone
+
+Layout
+
+← All Brainlifts
+
+AlphaWrite: Aligning AI Writing Practice with The Writing Revolution
+DOK1 Assessment · TWR-aligned writing system combining student-interest engagement with content-embedded instruction
+By Noel Pilkington
+
+
+Styling
+
+Title: --text-primary, large, bold
+
+Subtitle: --text-secondary
+
+Author: --text-muted
+
+No pills or buttons here
+
+This zone answers only one question:
+“What am I looking at?”
+
+Step 2: Move Status Into a Dedicated Status Rail
+
+The green BRAINLIFT pill is correct, but it’s in the wrong semantic place.
+
+New placement
+
+Directly below the subtitle, left-aligned, before navigation.
+
+Change the pill slightly
+
+Background: --success-soft
+
+Text: --success
+
+Add subtle icon checkmark only
+
+Reduce size slightly
+
+Optional enhancement:
+Add a secondary micro-label next to it:
+
+✓ Brainlift · DOK1 Graded
+
+
+This answers:
+“What state is this artifact in?”
+
+Step 3: Turn Tabs Into True Mode Navigation
+
+Your tabs are visually mixed with actions. That’s the biggest UX violation here.
+
+Tabs should be:
+
+Visually flat
+
+Left-aligned
+
+Clearly separated from actions
+
+New structure
+[ Fact Grading ] [ Contradictions ] [ Reading List ]
+
+
+Styling
+
+Inactive: --text-secondary
+
+Active:
+
+Text: --primary
+
+Bottom border: 2px solid --primary
+
+No filled backgrounds for active tabs
+
+No rounded pill styling
+
+These are modes, not buttons.
+
+This answers:
+“What am I doing right now?”
+
+Step 4: Move Actions Into a Right-Aligned Action Cluster
+
+Actions should never compete with navigation.
+
+Group actions into two tiers
+Primary action group (right-aligned)
+
+Update
+
+Secondary action group
+
+PDF
+
+Share
+
+Visual treatment
+
+Update: Primary button
+
+PDF, Share: Ghost buttons
+
+Layout
+
+                                   [ Update ]   [ PDF ]   [ Share ]
+
+
+Important
+
+Remove orange fill from Fact Grading. Orange implies action, not state.
+
+Orange should disappear entirely from this header.
+
+This answers:
+“What can I do to this artifact?”
+
+Step 5: Introduce a Thin Structural Divider
+
+Add a single horizontal divider after the header.
+
+Color: --border
+
+Height: 1px
+
+Full width
+
+This visually “locks” the header and makes the content below feel grounded.
+
+Step 6: Final Clean Header Blueprint
+
+Visually, the top should now read like this:
+
+← All Brainlifts
+
+AlphaWrite: Aligning AI Writing Practice with The Writing Revolution
+DOK1 Assessment · TWR-aligned writing system combining student-interest engagement with content-embedded instruction
+By Noel Pilkington
+
+✓ Brainlift · DOK1 Graded
+
+[ Fact Grading ] [ Contradictions ] [ Reading List ]          [ Update ] [ PDF ] [ Share ]
+────────────────────────────────────────────────────────────────────────────
+
+
+No color shouting. Clear hierarchy. Calm authority.
+
+Why This Works
+
+Identity is separated from interaction
+
+Status is informational, not interactive
+
+Navigation looks like navigation
+
+Actions look like actions
+
+Nothing competes for attention
+
+This will read immediately as:
+“This is a serious internal analysis tool.”

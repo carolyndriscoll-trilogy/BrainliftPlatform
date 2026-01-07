@@ -1,0 +1,138 @@
+BEST-PRACTICE REFINEMENTS (DO THESE NEXT)
+FIX 1: Remove the box around the TENSION summary
+What to change
+
+Take the TENSION block out of a box.
+
+Instead, render it as a labeled paragraph.
+
+Before (current)
+[Box]
+TENSION
+Student-interest writing builds engagement…
+
+After (best practice)
+Tension
+Student-interest writing builds engagement (Fact 1.1), while rigorous academic writing appears to require knowledge-rich content and prior instruction (Facts 2.1, 4.2, 7.3).
+
+
+No background fill
+
+Slightly muted text
+
+Label in small caps or bold
+
+Why this works:
+
+Keeps it interpretive
+
+Prevents it from feeling like an alert
+
+Matches modern research UIs
+
+FIX 2: Visually group the claims as a “set”
+
+Right now the claims are just lines of text.
+
+Instead, make it clear they belong together.
+
+Best practice format
+Claims in tension
+• Student-interest prompts increase willingness to write
+• Content drives rigor through knowledge-rich instruction
+• Novice writers should write about content already taught
+• Writing tasks should attach to the content you teach
+
+
+Small label + bullets = intentional grouping.
+
+This is standard in policy and academic tools.
+
+FIX 3: Make the section titles do more work
+
+Your titles are good, but they can do more.
+
+Change this:
+
+Interest vs. Content for Transfer
+
+To this:
+
+Interest vs. Content for Transfer
+Engagement benefits vs. knowledge-driven rigor
+
+One short clarifying subtitle reduces ambiguity and cognitive load.
+
+This is a very common 2026 UX pattern.
+
+FIX 4: Tone down the left rail further
+
+The left rail is correct structurally, but still slightly heavy.
+
+What to do
+
+Reduce contrast
+
+Reduce font weight
+
+Remove the explanatory paragraph from the rail
+
+The rail should be:
+
+orientation only
+
+never content
+
+Move this text:
+
+“Tensions flagged for awareness…”
+
+to the top of the main pane, once, not in the rail.
+
+FIX 5: Increase vertical spacing between tension sections
+
+Instead of separators or boxes:
+
+Use whitespace
+
+Let sections breathe
+
+Modern UX favors fewer dividers, more air.
+
+If you squint at the page and it still feels busy, add space, not lines.
+
+WHAT THIS PAGE SHOULD FEEL LIKE WHEN FINISHED
+
+Ask yourself:
+
+Does this feel like a thinking surface, not a warning page?
+
+Does it read like a research memo, not a dashboard?
+
+Does it encourage reflection instead of action?
+
+If yes, you’re aligned with best practice.
+
+You are very close.
+
+WHAT YOU SHOULD NOT CHANGE
+
+Do not:
+
+Add color back
+
+Add actions or buttons
+
+Add “resolve” workflows
+
+Add ranking or severity
+
+This page is doing exactly what Joe described:
+
+“Highlight them, don’t resolve them.”
+
+FINAL DESIGN PRINCIPLE (WRITE THIS ON A STICKY NOTE)
+
+Contradictions are annotations, not alerts.
+
+Every UI decision on this page should follow that rule.

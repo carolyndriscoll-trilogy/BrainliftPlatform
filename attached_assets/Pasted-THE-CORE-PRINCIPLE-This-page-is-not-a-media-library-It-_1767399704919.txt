@@ -1,0 +1,177 @@
+THE CORE PRINCIPLE
+
+This page is not a media library.
+It is a research workflow tied to a fact base.
+
+So the ordering should answer this question:
+
+“What should I read first, second, third, given what the DOK1 facts are trying to establish or test?”
+
+Not:
+
+“What kind of link is this?”
+
+THE RIGHT PRIMARY ORDERING (DO THIS)
+Primary ordering: by PURPOSE / FACT CLUSTER
+
+Group sources by what they help evaluate, not where they come from.
+
+This keeps the page intellectually coherent.
+
+Example section structure (copy this):
+1. Motivation and Student Interest
+
+Relates to facts: 1.1, 2.1
+
+(put all motivation-related sources here, regardless of blog, Substack, magazine, podcast)
+
+2. Explicit Instruction and Sentence-Level Writing
+
+Relates to facts: 1.2, 2.4
+
+3. Cognitive Load and Writing-to-Learn
+
+Relates to facts: 3.1–4.2
+
+4. Knowledge Building and Transfer
+
+Relates to facts: 4.3, 5.1–5.2
+
+5. Feedback, Mentorship, and Teacher Practice
+
+Relates to facts: 6.1–7.3
+
+This is the single biggest UX improvement you can make to this page.
+
+SECONDARY ORDERING (WITHIN EACH GROUP)
+
+Inside each section, order sources like this:
+
+1. Foundational / Authoritative
+
+Peer-reviewed research
+
+Meta-analyses
+
+Canonical books
+
+Official reports
+
+2. Interpretive / Explanatory
+
+Magazine features
+
+Policy briefs
+
+High-quality blog posts
+
+3. Perspective / Discourse
+
+Substacks
+
+Twitter threads
+
+Practitioner commentary
+
+This subtly signals:
+
+what carries the most evidentiary weight
+
+what adds interpretation or context
+
+Without saying it explicitly.
+
+WHAT TO DO WITH SOURCE TYPE (IMPORTANT)
+Source type should be:
+
+Visible
+
+Secondary
+
+Non-dominant
+
+Exactly how you already have it now is close to right:
+
+Blog · 5 min
+Substack · 8 min
+Twitter · 35 min
+
+That’s perfect as metadata, not structure.
+
+Do not create sections like:
+
+“Blogs”
+
+“Substacks”
+
+“Twitter”
+
+That turns this into a feed, not a research tool.
+
+HOW THIS CHANGES THE FEEL OF THE PAGE
+Before (current feeling)
+
+Long scroll
+
+Everything equal
+
+Hard to know where to start
+
+“Why is this here?”
+
+After (with grouping)
+
+Clear intellectual path
+
+Easy entry points
+
+Reviewers can stop and resume
+
+Strong alignment to the fact base
+
+Joe’s “I’m surprised by some of them” feedback usually disappears when purpose grouping is added.
+
+EXACT IMPLEMENTATION STEPS (VERY SIMPLE)
+
+In Replit, do only this:
+
+Insert plain text section headers (no cards, no accordions)
+
+Under each header, list the relevant existing cards
+
+Add one line to each card:
+
+Relates to facts: 3.1, 3.5
+
+
+That’s it.
+
+No new UI components required.
+
+WHEN SOURCE-TYPE GROUPING IS APPROPRIATE (EDGE CASE)
+
+Only consider grouping by source type if:
+
+the user’s goal is “browse”
+
+or “discover”
+
+or “skim content”
+
+That is not the goal of this page.
+
+This page is for deliberate evaluation.
+
+FINAL ANSWER (CLEAR AND DECISIVE)
+
+Primary grouping: by fact cluster / research question
+
+Secondary ordering: by evidentiary weight
+
+Source type: metadata only, never the main structure
+
+If you want, next I can:
+
+map your existing list into the exact sections above
+
+or help you decide which sources are “core” vs “optional” within each section

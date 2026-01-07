@@ -1,0 +1,195 @@
+CHANGE 1: Show the source directly under every fact
+What to do
+
+In the Fact (as written) column, add one new line under the claim.
+
+Before
+Sentence-first practice aligns with TWR sequencing (sentence → paragraph)
+
+After
+Sentence-first practice aligns with TWR sequencing (sentence → paragraph)
+Source: Hochman & Wexler, The Writing Revolution 2.0
+
+
+Optional if you want links:
+
+Source: Hochman & Wexler, The Writing Revolution 2.0 (link)
+
+Rules
+
+Smaller text than the claim
+
+Muted color
+
+Same place for every fact
+
+Always visible, never hidden in notes
+
+Why this matters
+
+This instantly answers:
+“What evidence is this claim based on?”
+
+Right now that answer is buried. This fixes the trust problem immediately.
+
+CHANGE 2: Reformat “Verification Notes” into a structured block
+
+Do not rewrite content.
+Only change formatting.
+
+What to do
+
+Inside the Verification Notes column, break the text into three labeled lines.
+
+Before
+Verified. The TWR method explicitly begins with sentence-level instruction before moving to paragraphs...
+
+After
+Verdict: Verified
+Why: Sentence-level instruction precedes paragraph writing
+Evidence: Hochman & Wexler explicitly argue writing must begin at the sentence level and not develop naturally
+
+Rules
+
+Bold the labels: Verdict, Why, Evidence
+
+Keep text exactly the same
+
+Limit each line to 1 sentence if possible
+
+Why this matters
+
+This makes notes scannable instead of overwhelming.
+
+A reviewer can now skim only the Why line and understand the judgment.
+
+CHANGE 3: Shrink contradiction warnings into annotations
+
+Those large beige blocks are visually dominating the page.
+
+What to do
+
+Replace the big contradiction banner with a small inline annotation.
+
+Before
+[Large beige box]
+⚠ Contradicts Fact 4.1
+
+After (inline, near the score or bottom of row)
+⚠ Contradicts: 4.1
+
+
+Optional if there are multiple:
+
+⚠ Contradicts: 3.5, 4.2
+
+Rules
+
+Small
+
+Inline
+
+Same position for every row
+
+No big background blocks
+
+Why this matters
+
+Contradictions are context, not errors.
+They should annotate the fact, not overpower it.
+
+CHANGE 4: Reduce visual noise in the table
+
+You do not need a redesign.
+
+Just do this:
+
+What to do
+
+Keep rows white by default
+
+Use thin divider lines between rows
+
+Only change background color on hover
+
+Why
+
+You have long text. Row striping makes it harder to read.
+
+This single change makes the table calmer and more “research-grade”.
+
+EXACT SOURCE TEXT TO USE (copy/paste)
+
+Use exactly these strings for the source line under each fact.
+
+Facts 1.1–1.3, 2.1–2.3, 4.3, 7.3
+Source: Hochman & Wexler, The Writing Revolution 2.0
+
+Fact 2.4
+Source: Hochman & Wexler (2017), One Sentence at a Time, American Educator
+
+Facts 3.1–3.4, 5.2
+Source: Kirschner & Hendrick, How Learning Happens
+
+Fact 3.5
+Source: Natalie Wexler (2019), Writing and Cognitive Load Theory, researchED
+
+Facts 4.1–4.2
+Source: Knowledge Matters Campaign Podcast, Memory and the Writing Effect
+
+Fact 5.1
+Source: Rothkopf (1970), Review of Educational Research
+
+Fact 6.1
+Source: Yeager, 10 to 25
+
+Fact 6.2
+Source: Yeager et al. (2014), Wise Feedback
+
+Facts 7.1–7.2
+Source: Shulman (1986), Those Who Understand
+
+That is sufficient. No bibliography page needed.
+
+WHAT THE ROW SHOULD LOOK LIKE WHEN YOU’RE DONE
+
+Visually, one row should read like this:
+
+1.2
+Sentence-first practice aligns with TWR sequencing (sentence → paragraph)
+Source: Hochman & Wexler, The Writing Revolution 2.0
+
+Score: 5  Verified
+
+Verdict: Verified
+Why: Sentence-level instruction precedes paragraph writing
+Evidence: Writing must begin at the sentence level and not develop naturally
+
+⚠ Contradicts: 1.1
+
+
+If your screen looks like this, you’re done.
+
+FINAL CHECK (very important)
+
+If you do only these four things:
+
+Source line under every fact
+
+Structured notes
+
+Small contradiction annotations
+
+Reduced row noise
+
+The UI will:
+
+feel intentional
+
+feel defensible
+
+feel like an internal ESW tool
+
+stop fighting you
+
+No more color chaos. No more refactors.

@@ -1,0 +1,198 @@
+Below are plain-English UX instructions you can implement directly in Replit.
+ No Tailwind talk. No refactors. No architecture. Just what to change on the page.
+
+WHAT THIS PAGE IS SUPPOSED TO DO
+The Reading List page has one job:
+Help a reviewer spend ~1 hour a day reading external sources in relation to the DOK1 facts, then grade alignment.
+Right now it feels like:
+a content feed
+
+
+a link list
+
+
+a grading interface
+
+
+an action page
+
+
+All at once.
+We’ll fix that by clarifying hierarchy and tightening each card.
+
+FIX 1: Clarify the page purpose at the top
+What to change
+Replace the current instruction bar with a two-line purpose block.
+Replace this:
+Instructions: Read each source (~1 hour total). Grade each for alignment to DOK1 fact base.
+With this:
+Reading List (≈ 60 minutes total)
+ Use these sources to validate, challenge, or extend the DOK1 facts. Grade each source for alignment after reading.
+Why
+This immediately explains:
+why the list exists
+
+
+how long it should take
+
+
+what “Grade” actually means
+
+
+
+FIX 2: Make each item a “Source Card,” not a feed item
+Right now each item feels too tall and too flat.
+For each source card, enforce this structure:
+Line 1 (meta, small)
+Type · Time
+ Example:
+ Blog · 5 min
+Line 2 (author)
+Larry Ferlazzo (MindShift / KQED)
+Line 3 (title, dominant)
+What Motivates a Student’s Interest in Reading and Writing
+Line 4 (why it matters)
+Covers: One clear sentence about how this source connects to the facts
+Line 5 (actions)
+[ Open Source ]  [ Grade ]
+That’s it.
+
+FIX 3: Reduce visual noise inside each card
+What to remove or shrink
+Big pill shapes for content type
+
+
+Excess padding
+
+
+Repeated icons
+
+
+What to keep
+Clean spacing
+
+
+Thin card border
+
+
+Consistent vertical rhythm
+
+
+This page should feel lighter than the Fact Grading page, not heavier.
+
+FIX 4: Make “Grade” feel secondary, not dominant
+Right now every “Grade” button screams for attention.
+Change this behavior:
+“Open Source” is the primary action
+
+
+“Grade” is secondary until clicked
+
+
+How it should feel
+You:
+Click Open
+
+
+Read
+
+
+Come back
+
+
+Click Grade
+
+
+Visual cue
+“Grade” should look like a quiet dropdown or secondary button
+
+
+Not equal weight to “Open”
+
+
+
+FIX 5: Group sources by what they address (this is key)
+Right now it’s just a long list.
+Add simple section headers like:
+Motivation & Interest (Facts 1.1, 2.1)
+ (list relevant sources)
+Explicit Instruction & Sentence-Level Writing (Facts 1.2, 2.4)
+Cognitive Load & Writing-to-Learn (Facts 3.1–4.2)
+Knowledge Building & Transfer (Facts 4.3, 5.1–5.2)
+Feedback, Mentorship, & Teacher Practice (Facts 6.1–7.3)
+Why this matters
+This turns the page into:
+a guided reading experience
+
+
+not a scroll wall
+
+
+And it ties directly back to the fact base.
+
+FIX 6: Show fact alignment before grading
+Add one line to each card:
+Relates to: 1.1, 2.1
+That’s it. No logic needed. Just text.
+This answers:
+“Why am I reading this?”
+before the user clicks anything.
+
+FIX 7: Tighten the card height (important)
+Most of your cards are too tall.
+Target height
+Each card should be readable in 5–7 seconds without scrolling.
+If a card takes longer than that, it’s doing too much.
+
+WHAT A SINGLE CARD SHOULD LOOK LIKE (FINAL)
+Blog · 5 min
+Larry Ferlazzo (MindShift / KQED)
+
+What Motivates a Student’s Interest in Reading and Writing
+
+Covers: Explains why student choice increases motivation to write; relevant to Fact 1.1
+
+Relates to: 1.1
+
+[ Open Source ]   [ Grade ▼ ]
+
+That’s a clean, professional, readable unit.
+
+WHAT NOT TO DO
+Do not:
+Add more color
+
+
+Add icons everywhere
+
+
+Add grading fields inline
+
+
+Add collapsible accordions inside cards
+
+
+Add “AI” features to this page yet
+
+
+This page is about reading first.
+
+WHY THIS WILL FEEL WAY BETTER
+After these changes:
+The page has a single purpose
+
+
+Each source is clearly justified
+
+
+Reading feels intentional
+
+
+Grading feels earned
+
+
+The list feels curated, not dumped
+
+
+This will also make Joe’s comment about “surprised by some of them” go away, because the why is now explicit.
+
