@@ -196,7 +196,7 @@ One-line summary:`
 /**
  * Truncate purpose at a sentence boundary, with ellipsis if needed.
  */
-function truncatePurpose(text: string, maxLength: number = 150): string {
+export function truncatePurpose(text: string, maxLength: number = 150): string {
   if (text.length <= maxLength) return text;
 
   // Try to cut at sentence boundary
@@ -214,16 +214,16 @@ function truncatePurpose(text: string, maxLength: number = 150): string {
   return text.substring(0, lastSpace > 0 ? lastSpace : maxLength) + '...';
 }
 
-function getIndentLevel(line: string): number {
+export function getIndentLevel(line: string): number {
   const match = line.match(/^(\s*)/);
   return match ? match[1].length : 0;
 }
 
-function cleanHeader(line: string): string {
+export function cleanHeader(line: string): string {
   return line.trim().replace(/^[-•*]\s*/, '').replace(/^#+\s*/, '').replace(/\*\*+/g, '').replace(/[:]$/, '').trim();
 }
 
-function extractUrl(line: string): string | null {
+export function extractUrl(line: string): string | null {
   const urlMatch = line.match(/https?:\/\/[^\s\]\)]+/);
   return urlMatch ? urlMatch[0] : null;
 }
