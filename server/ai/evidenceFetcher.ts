@@ -98,6 +98,7 @@ async function callEvidenceSearchModel(model: string, prompt: string): Promise<s
       temperature: 0.1,
       max_tokens: 1000,
     }),
+    signal: AbortSignal.timeout(60_000),
   });
 
   if (!response.ok) {

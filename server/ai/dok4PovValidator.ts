@@ -62,6 +62,7 @@ async function callValidationModel(
         temperature: 0.0,
         max_tokens: 500,
       }),
+      signal: AbortSignal.timeout(60_000),
     });
 
     if (!response.ok) {

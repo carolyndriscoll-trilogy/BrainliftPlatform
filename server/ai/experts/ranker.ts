@@ -98,6 +98,7 @@ Example: ["John Smith", "0", "Jane Doe", "Focus"] → [true, false, true, false]
         temperature: 0,
         max_tokens: 200,
       }),
+      signal: AbortSignal.timeout(30_000),
     });
 
     if (!response.ok) throw new Error(`API error: ${response.status}`);
@@ -260,6 +261,7 @@ Assign differentiated scores (1-10) based on the citation counts or relevance in
         temperature: 0.1,
         max_tokens: 2000,
       }),
+      signal: AbortSignal.timeout(60_000),
     });
 
     if (!response.ok) {

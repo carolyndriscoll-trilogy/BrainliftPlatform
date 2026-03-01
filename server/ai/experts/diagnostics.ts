@@ -194,6 +194,7 @@ async function callModel(
       temperature: 0,
       max_tokens: 1500,
     }),
+    signal: AbortSignal.timeout(60_000),
   });
 
   if (!response.ok) {
