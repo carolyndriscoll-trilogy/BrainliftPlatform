@@ -69,6 +69,7 @@ async function callGradingModel(
         temperature: 0.1,
         max_tokens: 1500,
       }),
+      signal: AbortSignal.timeout(120_000),
     });
 
     if (!response.ok) {

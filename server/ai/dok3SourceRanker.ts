@@ -59,6 +59,7 @@ async function callModel(
       'HTTP-Referer': 'https://replit.com',
     },
     body: JSON.stringify(body),
+    signal: AbortSignal.timeout(60_000),
   });
 
   if (!response.ok) {

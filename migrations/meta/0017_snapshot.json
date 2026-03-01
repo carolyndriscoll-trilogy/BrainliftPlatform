@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
+  "id": "fb700297-6b10-4747-beed-e6529eafdb14",
+=======
   "id": "d7bd164b-6f1c-4ce2-a36c-bfec516bab26",
+>>>>>>> origin/main
   "prevId": "05a1d12e-2de1-4cda-8db8-d3d86e62c44e",
   "version": "7",
   "dialect": "postgresql",
@@ -449,6 +453,9 @@
           "notNull": true
         }
       },
+<<<<<<< HEAD
+      "indexes": {},
+=======
       "indexes": {
         "idx_brainlift_versions_brainlift_id": {
           "name": "idx_brainlift_versions_brainlift_id",
@@ -466,6 +473,7 @@
           "with": {}
         }
       },
+>>>>>>> origin/main
       "foreignKeys": {
         "brainlift_versions_brainlift_id_brainlifts_id_fk": {
           "name": "brainlift_versions_brainlift_id_brainlifts_id_fk",
@@ -477,7 +485,11 @@
           "columnsTo": [
             "id"
           ],
+<<<<<<< HEAD
+          "onDelete": "no action",
+=======
           "onDelete": "cascade",
+>>>>>>> origin/main
           "onUpdate": "no action"
         }
       },
@@ -521,6 +533,34 @@
           "primaryKey": false,
           "notNull": false
         },
+<<<<<<< HEAD
+        "purpose_what_learning": {
+          "name": "purpose_what_learning",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "purpose_why_matters": {
+          "name": "purpose_why_matters",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "purpose_what_able_to_do": {
+          "name": "purpose_what_able_to_do",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "build_phase": {
+          "name": "build_phase",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 1
+        },
+=======
+>>>>>>> origin/main
         "author": {
           "name": "author",
           "type": "text",
@@ -715,6 +755,9 @@
           "notNull": true
         }
       },
+<<<<<<< HEAD
+      "indexes": {},
+=======
       "indexes": {
         "idx_contradiction_clusters_brainlift_id": {
           "name": "idx_contradiction_clusters_brainlift_id",
@@ -732,6 +775,7 @@
           "with": {}
         }
       },
+>>>>>>> origin/main
       "foreignKeys": {
         "contradiction_clusters_brainlift_id_brainlifts_id_fk": {
           "name": "contradiction_clusters_brainlift_id_brainlifts_id_fk",
@@ -743,7 +787,11 @@
           "columnsTo": [
             "id"
           ],
+<<<<<<< HEAD
+          "onDelete": "no action",
+=======
           "onDelete": "cascade",
+>>>>>>> origin/main
           "onUpdate": "no action"
         }
       },
@@ -776,6 +824,9 @@
           "notNull": true
         }
       },
+<<<<<<< HEAD
+      "indexes": {},
+=======
       "indexes": {
         "idx_dok2_fact_relations_summary_id": {
           "name": "idx_dok2_fact_relations_summary_id",
@@ -808,6 +859,7 @@
           "with": {}
         }
       },
+>>>>>>> origin/main
       "foreignKeys": {
         "dok2_fact_relations_summary_id_dok2_summaries_id_fk": {
           "name": "dok2_fact_relations_summary_id_dok2_summaries_id_fk",
@@ -819,7 +871,11 @@
           "columnsTo": [
             "id"
           ],
+<<<<<<< HEAD
+          "onDelete": "no action",
+=======
           "onDelete": "cascade",
+>>>>>>> origin/main
           "onUpdate": "no action"
         },
         "dok2_fact_relations_fact_id_facts_id_fk": {
@@ -832,7 +888,11 @@
           "columnsTo": [
             "id"
           ],
+<<<<<<< HEAD
+          "onDelete": "no action",
+=======
           "onDelete": "cascade",
+>>>>>>> origin/main
           "onUpdate": "no action"
         }
       },
@@ -872,6 +932,9 @@
           "default": 0
         }
       },
+<<<<<<< HEAD
+      "indexes": {},
+=======
       "indexes": {
         "idx_dok2_points_summary_id": {
           "name": "idx_dok2_points_summary_id",
@@ -889,6 +952,7 @@
           "with": {}
         }
       },
+>>>>>>> origin/main
       "foreignKeys": {
         "dok2_points_summary_id_dok2_summaries_id_fk": {
           "name": "dok2_points_summary_id_dok2_summaries_id_fk",
@@ -900,7 +964,11 @@
           "columnsTo": [
             "id"
           ],
+<<<<<<< HEAD
+          "onDelete": "no action",
+=======
           "onDelete": "cascade",
+>>>>>>> origin/main
           "onUpdate": "no action"
         }
       },
@@ -1006,6 +1074,9 @@
           "notNull": false
         }
       },
+<<<<<<< HEAD
+      "indexes": {},
+=======
       "indexes": {
         "idx_dok2_summaries_brainlift_id": {
           "name": "idx_dok2_summaries_brainlift_id",
@@ -1023,6 +1094,7 @@
           "with": {}
         }
       },
+>>>>>>> origin/main
       "foreignKeys": {
         "dok2_summaries_brainlift_id_brainlifts_id_fk": {
           "name": "dok2_summaries_brainlift_id_brainlifts_id_fk",
@@ -1034,7 +1106,11 @@
           "columnsTo": [
             "id"
           ],
+<<<<<<< HEAD
+          "onDelete": "no action",
+=======
           "onDelete": "cascade",
+>>>>>>> origin/main
           "onUpdate": "no action"
         }
       },
@@ -2002,6 +2078,42 @@
           "primaryKey": false,
           "notNull": true,
           "default": true
+<<<<<<< HEAD
+        },
+        "who": {
+          "name": "who",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "focus": {
+          "name": "focus",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "why": {
+          "name": "why",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "where": {
+          "name": "where",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "draft_status": {
+          "name": "draft_status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'draft'"
+        }
+      },
+      "indexes": {},
+=======
         }
       },
       "indexes": {
@@ -2021,6 +2133,7 @@
           "with": {}
         }
       },
+>>>>>>> origin/main
       "foreignKeys": {
         "experts_brainlift_id_brainlifts_id_fk": {
           "name": "experts_brainlift_id_brainlifts_id_fk",
@@ -2032,7 +2145,11 @@
           "columnsTo": [
             "id"
           ],
+<<<<<<< HEAD
+          "onDelete": "no action",
+=======
           "onDelete": "cascade",
+>>>>>>> origin/main
           "onUpdate": "no action"
         }
       },
@@ -2096,6 +2213,9 @@
           "notNull": false
         }
       },
+<<<<<<< HEAD
+      "indexes": {},
+=======
       "indexes": {
         "idx_fact_model_scores_verification_id": {
           "name": "idx_fact_model_scores_verification_id",
@@ -2113,6 +2233,7 @@
           "with": {}
         }
       },
+>>>>>>> origin/main
       "foreignKeys": {
         "fact_model_scores_verification_id_fact_verifications_id_fk": {
           "name": "fact_model_scores_verification_id_fact_verifications_id_fk",
@@ -2124,7 +2245,11 @@
           "columnsTo": [
             "id"
           ],
+<<<<<<< HEAD
+          "onDelete": "no action",
+=======
           "onDelete": "cascade",
+>>>>>>> origin/main
           "onUpdate": "no action"
         }
       },
@@ -2195,6 +2320,9 @@
           "default": "now()"
         }
       },
+<<<<<<< HEAD
+      "indexes": {},
+=======
       "indexes": {
         "idx_fact_redundancy_groups_brainlift_id": {
           "name": "idx_fact_redundancy_groups_brainlift_id",
@@ -2212,6 +2340,7 @@
           "with": {}
         }
       },
+>>>>>>> origin/main
       "foreignKeys": {
         "fact_redundancy_groups_brainlift_id_brainlifts_id_fk": {
           "name": "fact_redundancy_groups_brainlift_id_brainlifts_id_fk",
@@ -2223,7 +2352,11 @@
           "columnsTo": [
             "id"
           ],
+<<<<<<< HEAD
+          "onDelete": "no action",
+=======
           "onDelete": "cascade",
+>>>>>>> origin/main
           "onUpdate": "no action"
         }
       },
@@ -2338,6 +2471,9 @@
           "default": "now()"
         }
       },
+<<<<<<< HEAD
+      "indexes": {},
+=======
       "indexes": {
         "idx_fact_verifications_fact_id": {
           "name": "idx_fact_verifications_fact_id",
@@ -2355,6 +2491,7 @@
           "with": {}
         }
       },
+>>>>>>> origin/main
       "foreignKeys": {
         "fact_verifications_fact_id_facts_id_fk": {
           "name": "fact_verifications_fact_id_facts_id_fk",
@@ -2366,7 +2503,11 @@
           "columnsTo": [
             "id"
           ],
+<<<<<<< HEAD
+          "onDelete": "no action",
+=======
           "onDelete": "cascade",
+>>>>>>> origin/main
           "onUpdate": "no action"
         }
       },
@@ -2454,6 +2595,9 @@
           "default": true
         }
       },
+<<<<<<< HEAD
+      "indexes": {},
+=======
       "indexes": {
         "idx_facts_brainlift_id": {
           "name": "idx_facts_brainlift_id",
@@ -2471,6 +2615,7 @@
           "with": {}
         }
       },
+>>>>>>> origin/main
       "foreignKeys": {
         "facts_brainlift_id_brainlifts_id_fk": {
           "name": "facts_brainlift_id_brainlifts_id_fk",
@@ -2482,7 +2627,11 @@
           "columnsTo": [
             "id"
           ],
+<<<<<<< HEAD
+          "onDelete": "no action",
+=======
           "onDelete": "cascade",
+>>>>>>> origin/main
           "onUpdate": "no action"
         }
       },
@@ -2777,6 +2926,9 @@
           "default": "now()"
         }
       },
+<<<<<<< HEAD
+      "indexes": {},
+=======
       "indexes": {
         "idx_llm_feedback_fact_id": {
           "name": "idx_llm_feedback_fact_id",
@@ -2794,6 +2946,7 @@
           "with": {}
         }
       },
+>>>>>>> origin/main
       "foreignKeys": {
         "llm_feedback_verification_id_fact_verifications_id_fk": {
           "name": "llm_feedback_verification_id_fact_verifications_id_fk",
@@ -2805,7 +2958,11 @@
           "columnsTo": [
             "id"
           ],
+<<<<<<< HEAD
+          "onDelete": "no action",
+=======
           "onDelete": "cascade",
+>>>>>>> origin/main
           "onUpdate": "no action"
         },
         "llm_feedback_fact_id_facts_id_fk": {
@@ -2818,7 +2975,11 @@
           "columnsTo": [
             "id"
           ],
+<<<<<<< HEAD
+          "onDelete": "no action",
+=======
           "onDelete": "cascade",
+>>>>>>> origin/main
           "onUpdate": "no action"
         }
       },

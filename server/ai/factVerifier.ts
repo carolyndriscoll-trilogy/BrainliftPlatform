@@ -102,6 +102,7 @@ Grade this claim based on available evidence OR your knowledge of educational re
         temperature: 0.1,
         max_tokens: 800,
       }),
+      signal: AbortSignal.timeout(60_000),
     });
 
     if (!response.ok) {

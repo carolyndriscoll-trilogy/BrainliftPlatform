@@ -149,7 +149,7 @@ export const brainlifts = pgTable("brainlifts", {
 
 export const facts = pgTable("facts", {
   id: serial("id").primaryKey(),
-  brainliftId: integer("brainlift_id").notNull().references(() => brainlifts.id),
+  brainliftId: integer("brainlift_id").notNull().references(() => brainlifts.id, { onDelete: "cascade" }),
   originalId: text("original_id").notNull(), // The string ID from JSON like "6.1"
   category: text("category").notNull(),
   source: text("source"), // Citation or source reference
@@ -160,21 +160,25 @@ export const facts = pgTable("facts", {
   note: text("note"), // Explanation for the score
   flags: text("flags").array(), // New column for flags like "Incomplete/Unverifiable"
   isGradeable: boolean("is_gradeable").default(true).notNull(),
-});
+}, (table) => [
+  index("idx_facts_brainlift_id").on(table.brainliftId),
+]);
 
 export const contradictionClusters = pgTable("contradiction_clusters", {
   id: serial("id").primaryKey(),
-  brainliftId: integer("brainlift_id").notNull().references(() => brainlifts.id),
+  brainliftId: integer("brainlift_id").notNull().references(() => brainlifts.id, { onDelete: "cascade" }),
   name: text("name").notNull(),
   tension: text("tension").notNull(),
   status: text("status").notNull(),
   factIds: text("fact_ids").array().notNull(),
   claims: text("claims").array().notNull(),
-});
+}, (table) => [
+  index("idx_contradiction_clusters_brainlift_id").on(table.brainliftId),
+]);
 
 export const brainliftVersions = pgTable("brainlift_versions", {
   id: serial("id").primaryKey(),
-  brainliftId: integer("brainlift_id").notNull().references(() => brainlifts.id),
+  brainliftId: integer("brainlift_id").notNull().references(() => brainlifts.id, { onDelete: "cascade" }),
   versionNumber: integer("version_number").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   sourceType: text("source_type").notNull(), // "html", "workflowy", "googledocs"
@@ -188,11 +192,13 @@ export const brainliftVersions = pgTable("brainlift_versions", {
     readingList: Array<{ type: string; author: string; topic: string; time: string; facts: string; url: string }>;
     grades: Array<{ readingListTopic: string; aligns: string | null; contradicts: string | null; newInfo: string | null; quality: number | null }>;
   }>().notNull(),
-});
+}, (table) => [
+  index("idx_brainlift_versions_brainlift_id").on(table.brainliftId),
+]);
 
 export const experts = pgTable("experts", {
   id: serial("id").primaryKey(),
-  brainliftId: integer("brainlift_id").notNull().references(() => brainlifts.id),
+  brainliftId: integer("brainlift_id").notNull().references(() => brainlifts.id, { onDelete: "cascade" }),
   name: text("name").notNull(),
   rankScore: integer("rank_score"), // 1-10 impact score (null if unranked)
   rationale: text("rationale"), // One-line explanation for ranking (null if unranked)
@@ -204,7 +210,9 @@ export const experts = pgTable("experts", {
   why: text("why"), // Relevance to this BrainLift
   where: text("where"), // Links (Twitter, website, etc.)
   draftStatus: text("draft_status").$type<'draft' | 'complete'>().default('draft'),
-});
+}, (table) => [
+  index("idx_experts_brainlift_id").on(table.brainliftId),
+]);
 
 // Brainlift Sharing - User-specific and token-based access control
 export const brainliftShares = pgTable("brainlift_shares", {
@@ -259,41 +267,45 @@ export type VerificationStatus = typeof VERIFICATION_STATUS[keyof typeof VERIFIC
 // Stores the overall verification state and consensus for each fact
 export const factVerifications = pgTable("fact_verifications", {
   id: serial("id").primaryKey(),
-  factId: integer("fact_id").notNull().references(() => facts.id),
+  factId: integer("fact_id").notNull().references(() => facts.id, { onDelete: "cascade" }),
   status: text("status").$type<VerificationStatus>().notNull().default('pending'),
-  
+
   // Evidence retrieved from cited source
   evidenceUrl: text("evidence_url"),
   evidenceContent: text("evidence_content"), // Actual content fetched from source
   evidenceFetchedAt: timestamp("evidence_fetched_at"),
   evidenceError: text("evidence_error"), // Error if fetch failed
-  
+
   // Consensus results (after all models have graded)
   consensusScore: integer("consensus_score"), // 1-5 final grade
   confidenceLevel: text("confidence_level"), // "high", "medium", "low"
   needsReview: boolean("needs_review").notNull().default(false), // Flag for human review
   verificationNotes: text("verification_notes"), // Explanation of consensus
-  
+
   // Human override
   humanOverrideScore: integer("human_override_score"), // If human overrides
   humanOverrideNotes: text("human_override_notes"),
   humanOverrideAt: timestamp("human_override_at"),
-  
+
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
-});
+}, (table) => [
+  index("idx_fact_verifications_fact_id").on(table.factId),
+]);
 
 // Stores individual model scores for each fact
 export const factModelScores = pgTable("fact_model_scores", {
   id: serial("id").primaryKey(),
-  verificationId: integer("verification_id").notNull().references(() => factVerifications.id),
+  verificationId: integer("verification_id").notNull().references(() => factVerifications.id, { onDelete: "cascade" }),
   model: text("model").$type<LLMModel>().notNull(), // Which LLM model
   score: integer("score"), // 1-5 grade from this model
   rationale: text("rationale"), // Model's explanation
   status: text("status").$type<VerificationStatus>().notNull().default('pending'),
   error: text("error"), // Error if model call failed
   completedAt: timestamp("completed_at"),
-});
+}, (table) => [
+  index("idx_fact_model_scores_verification_id").on(table.verificationId),
+]);
 
 // === RELATIONS ===
 
@@ -387,14 +399,16 @@ export const factModelScoresRelations = relations(factModelScores, ({ one }) => 
 // LLM Feedback System - Tracks human overrides to improve AI grading
 export const llmFeedback = pgTable("llm_feedback", {
   id: serial("id").primaryKey(),
-  verificationId: integer("verification_id").notNull().references(() => factVerifications.id),
-  factId: integer("fact_id").notNull().references(() => facts.id),
+  verificationId: integer("verification_id").notNull().references(() => factVerifications.id, { onDelete: "cascade" }),
+  factId: integer("fact_id").notNull().references(() => facts.id, { onDelete: "cascade" }),
   llmModel: text("llm_model").$type<LLMModel>().notNull(),
   llmScore: integer("llm_score").notNull(), // Original AI score (1-5)
   humanScore: integer("human_score").notNull(), // Human override score (1-5)
   scoreDifference: integer("score_difference").notNull(), // Absolute difference
   createdAt: timestamp("created_at").defaultNow().notNull(),
-});
+}, (table) => [
+  index("idx_llm_feedback_fact_id").on(table.factId),
+]);
 
 // Aggregated model accuracy stats - updated on each human override
 export const modelAccuracyStats = pgTable("model_accuracy_stats", {
@@ -432,15 +446,17 @@ export type RedundancyStatus = typeof REDUNDANCY_STATUS[keyof typeof REDUNDANCY_
 
 export const factRedundancyGroups = pgTable("fact_redundancy_groups", {
   id: serial("id").primaryKey(),
-  brainliftId: integer("brainlift_id").notNull().references(() => brainlifts.id),
-  groupName: text("group_name").notNull(), // e.g., "Funding statistics" 
+  brainliftId: integer("brainlift_id").notNull().references(() => brainlifts.id, { onDelete: "cascade" }),
+  groupName: text("group_name").notNull(), // e.g., "Funding statistics"
   factIds: integer("fact_ids").array().notNull(), // Array of fact IDs in this group
   primaryFactId: integer("primary_fact_id"), // Suggested fact to keep (highest score/most comprehensive)
   similarityScore: text("similarity_score").notNull(), // Average similarity percentage (e.g., "87%")
   reason: text("reason").notNull(), // Why these are considered redundant
   status: text("status").$type<RedundancyStatus>().notNull().default('pending'),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-});
+}, (table) => [
+  index("idx_fact_redundancy_groups_brainlift_id").on(table.brainliftId),
+]);
 
 export const factRedundancyGroupsRelations = relations(factRedundancyGroups, ({ one }) => ({
   brainlift: one(brainlifts, {
@@ -516,7 +532,7 @@ export type DOK2FailReason = typeof DOK2_FAIL_REASON[keyof typeof DOK2_FAIL_REAS
 // One summary group per source, containing multiple summary points
 export const dok2Summaries = pgTable("dok2_summaries", {
   id: serial("id").primaryKey(),
-  brainliftId: integer("brainlift_id").notNull().references(() => brainlifts.id),
+  brainliftId: integer("brainlift_id").notNull().references(() => brainlifts.id, { onDelete: "cascade" }),
   category: text("category").notNull(),
   sourceName: text("source_name").notNull(),
   sourceUrl: text("source_url"),
@@ -531,22 +547,29 @@ export const dok2Summaries = pgTable("dok2_summaries", {
   gradedAt: timestamp("graded_at"),
   failReason: text("fail_reason").$type<DOK2FailReason>(), // Auto-fail reason if grade=1
   sourceVerified: boolean("source_verified"), // Was the source URL successfully fetched?
-});
+}, (table) => [
+  index("idx_dok2_summaries_brainlift_id").on(table.brainliftId),
+]);
 
 // Individual summary points within a DOK2 group
 export const dok2Points = pgTable("dok2_points", {
   id: serial("id").primaryKey(),
-  summaryId: integer("summary_id").notNull().references(() => dok2Summaries.id),
+  summaryId: integer("summary_id").notNull().references(() => dok2Summaries.id, { onDelete: "cascade" }),
   text: text("text").notNull(),
   sortOrder: integer("sort_order").default(0),
-});
+}, (table) => [
+  index("idx_dok2_points_summary_id").on(table.summaryId),
+]);
 
 // Link DOK2 summaries to related DOK1 facts (for grading: "do summaries capture these facts?")
 export const dok2FactRelations = pgTable("dok2_fact_relations", {
   id: serial("id").primaryKey(),
-  summaryId: integer("summary_id").notNull().references(() => dok2Summaries.id),
-  factId: integer("fact_id").notNull().references(() => facts.id),
-});
+  summaryId: integer("summary_id").notNull().references(() => dok2Summaries.id, { onDelete: "cascade" }),
+  factId: integer("fact_id").notNull().references(() => facts.id, { onDelete: "cascade" }),
+}, (table) => [
+  index("idx_dok2_fact_relations_summary_id").on(table.summaryId),
+  index("idx_dok2_fact_relations_fact_id").on(table.factId),
+]);
 
 export const dok2SummariesRelations = relations(dok2Summaries, ({ one, many }) => ({
   brainlift: one(brainlifts, {

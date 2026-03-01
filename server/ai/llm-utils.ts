@@ -41,6 +41,7 @@ export async function callOpenRouterModel(
         temperature,
         max_tokens: maxTokens,
       }),
+      signal: AbortSignal.timeout(120_000),
     });
 
     if (!response.ok) {
@@ -83,5 +84,9 @@ export function extractJSON(raw: string): unknown {
     throw new Error('Could not find JSON in response');
   }
 
-  return JSON.parse(jsonMatch[0]);
+  try {
+    return JSON.parse(jsonMatch[0]);
+  } catch (err: any) {
+    throw new Error(`Failed to parse JSON from LLM response: ${err.message}`);
+  }
 }

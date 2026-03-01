@@ -21,6 +21,7 @@ async function callSummarizeAPI(model: string, fullText: string): Promise<string
       max_tokens: 150,
       temperature: 0.3,
     }),
+    signal: AbortSignal.timeout(30_000),
   });
 
   if (!response.ok) throw new Error(`API error: ${response.status}`);

@@ -67,6 +67,7 @@ export async function generateImagePrompt(
       max_tokens: 100,
       temperature: 0.7,
     }),
+    signal: AbortSignal.timeout(30_000),
   });
 
   if (!response.ok) {
