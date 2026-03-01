@@ -7,6 +7,7 @@ import { asyncHandler, BadRequestError, NotFoundError } from '../middleware/erro
 import { requireBrainliftAccess } from '../middleware/brainlift-auth';
 import { buildDiscussionSystemPrompt } from '../ai/discussion/system-prompt';
 import { buildDiscussionTools } from '../ai/discussion/tools';
+import { getLearnerContext, storeMessages } from '../utils/honcho';
 
 export const discussionRouter = Router();
 
@@ -44,7 +45,13 @@ discussionRouter.post(
       throw new NotFoundError('Learning stream item not found');
     }
 
-    const systemPrompt = buildDiscussionSystemPrompt(item, brainlift);
+    // Fetch learner profile from Honcho (non-blocking on failure)
+    const userId = req.authContext?.userId;
+    const learnerProfile = userId
+      ? await getLearnerContext(userId, 'discussion-agent', { searchQuery: item.topic })
+      : null;
+
+    const systemPrompt = buildDiscussionSystemPrompt(item, brainlift, learnerProfile);
     const tools = buildDiscussionTools(item, brainlift);
 
     const result = streamText({
@@ -53,6 +60,22 @@ discussionRouter.post(
       messages: await convertToModelMessages(messages),
       tools,
       stopWhen: stepCountIs(5),
+      onFinish: async () => {
+        // Store conversation to Honcho for learner profile building (fire-and-forget)
+        if (userId) {
+          const sessionKey = `discussion-${brainlift.slug}-${Date.now()}`;
+          const honchoMessages = messages
+            .filter(m => m.role === 'user' || m.role === 'assistant')
+            .map(m => ({
+              role: m.role as 'user' | 'assistant',
+              content: m.parts
+                ?.filter((p: any) => p.type === 'text')
+                .map((p: any) => p.text || '')
+                .join(' ') || '',
+            }));
+          storeMessages(sessionKey, userId, 'discussion-agent', honchoMessages);
+        }
+      },
     });
 
     result.pipeUIMessageStreamToResponse(res);

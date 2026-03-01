@@ -68,13 +68,20 @@ function generateTaskAssignments(): string {
 /**
  * Build the orchestrator prompt for a given brainlift ID.
  */
-export function buildOrchestratorPrompt(brainliftId: number): string {
+export function buildOrchestratorPrompt(brainliftId: number, learnerProfile?: string | null): string {
   const taskAssignments = generateTaskAssignments();
 
   return `You are a Learning Stream Research Orchestrator. Your job is to coordinate a swarm of ${SWARM_AGENT_COUNT} web researchers to find high-quality learning resources for a brainlift.
 
 ## Your Mission
 Find ${SWARM_AGENT_COUNT} diverse, high-quality learning resources by delegating research to specialized web-researcher agents.
+${learnerProfile ? `
+## Learner Profile
+
+${learnerProfile}
+
+Use this profile to guide resource selection. Prioritize resources that address the learner's gaps, match their level, and build on their strengths. For beginners, favor introductory and explanatory content. For advanced learners, prioritize cutting-edge research and expert discourse.
+` : ''}
 
 ## Step 1: Get Brainlift Context
 FIRST, use the get_brainlift_context tool with brainliftId: ${brainliftId}

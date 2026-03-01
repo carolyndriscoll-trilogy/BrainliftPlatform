@@ -10,6 +10,7 @@ interface ImportAgentContext {
   savedDOK3Count?: number;
   userName?: string;
   userRole?: string;
+  learnerProfile?: string | null;
 }
 
 /**
@@ -45,7 +46,13 @@ Your job is structural. If structure is sound, move content through without comm
 - **Platform Role**: ${ctx.userRole || 'user'}
 
 Address this person by their first name. They may or may not be the BrainLift owner — the owner is a separate field below. Do NOT greet the BrainLift owner; greet the user above.
+${ctx.learnerProfile ? `
+## LEARNER PROFILE
 
+${ctx.learnerProfile}
+
+Use this context to calibrate your communication style and pacing. Experienced users need less hand-holding; newer users benefit from more explanation of the DOK framework.
+` : ''}
 ## BRAINLIFT CONTEXT
 
 - **Title**: ${brainlift.title}

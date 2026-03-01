@@ -5,7 +5,8 @@ import type { LearningStreamItem, Brainlift } from '../../storage/base';
  */
 export function buildDiscussionSystemPrompt(
   item: LearningStreamItem,
-  brainlift: Pick<Brainlift, 'displayPurpose' | 'description' | 'title'>
+  brainlift: Pick<Brainlift, 'displayPurpose' | 'description' | 'title'>,
+  learnerProfile?: string | null
 ): string {
   const purpose = brainlift.displayPurpose || brainlift.description || 'No specific purpose defined.';
   const contentType = item.extractedContent
@@ -22,7 +23,13 @@ The user is building a BrainLift called "${brainlift.title}".
 Purpose: ${purpose}
 
 Everything they learn should connect back to this purpose. Help them see those connections.
+${learnerProfile ? `
+## LEARNER PROFILE
 
+${learnerProfile}
+
+Use this profile to adapt your scaffolding. For beginners, provide more structure and guidance. For advanced learners, challenge them with deeper questions and connections.
+` : ''}
 ## THE SOURCE THEY'RE READING
 
 - **Title**: ${item.topic}

@@ -120,6 +120,7 @@ export function buildDOK4QualityUserPrompt(params: {
   };
   traceabilityStatus: string;
   vanillaResponse: string | null;
+  learnerContext?: string | null;
 }): string {
   // Build DOK3 context
   const dok3Section = params.linkedDok3s.map(d => {
@@ -183,5 +184,8 @@ Foundation Integrity Index: ${m.index.toFixed(4)}
 TRACEABILITY: ${params.traceabilityStatus}
 
 S2 VANILLA LLM RESPONSE (what a default LLM says about this topic without the student's framework):
-${params.vanillaResponse || 'Vanilla response not available.'}`;
+${params.vanillaResponse || 'Vanilla response not available.'}${params.learnerContext ? `
+
+LEARNER CONTEXT:
+${params.learnerContext}` : ''}`;
 }

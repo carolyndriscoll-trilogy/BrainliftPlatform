@@ -271,7 +271,8 @@ class SwarmLogger {
 export async function runLearningStreamSwarm(
   brainliftId: number,
   options: SwarmOptions = {},
-  onEvent?: SwarmEventCallback
+  onEvent?: SwarmEventCallback,
+  learnerProfile?: string | null
 ): Promise<SwarmResult> {
   const startTime = Date.now();
   const errors: string[] = [];
@@ -308,7 +309,7 @@ export async function runLearningStreamSwarm(
     logger.debug('ORCH', 'MCP server created');
 
     // Build the orchestrator prompt
-    const orchestratorPrompt = buildOrchestratorPrompt(brainliftId);
+    const orchestratorPrompt = buildOrchestratorPrompt(brainliftId, learnerProfile);
     logger.debug('ORCH', 'Orchestrator prompt built', { promptLength: orchestratorPrompt.length });
 
     // Run the orchestrator with a simple string prompt

@@ -21,6 +21,7 @@ import { recomputeBrainliftScore, runPostProcessingPipeline } from '../services/
 import { createBrainliftForAgent } from '../services/import-agent';
 import { STAGE_LABELS } from '@shared/import-progress';
 import type { ImportPhase } from '@shared/schema';
+import { getLearnerContext, storeMessages, storeObservation } from '../utils/honcho';
 
 export const importAgentRouter = Router();
 
@@ -127,6 +128,12 @@ importAgentRouter.post(
       brainliftAuthor: brainlift.author,
     });
 
+    // Fetch learner profile from Honcho (non-blocking on failure)
+    const userId = req.authContext?.userId;
+    const learnerProfile = userId
+      ? await getLearnerContext(userId, 'import-agent')
+      : null;
+
     const systemPrompt = buildImportAgentSystemPrompt({
       brainlift,
       currentPhase,
@@ -136,6 +143,7 @@ importAgentRouter.post(
       savedDOK3Count,
       userName,
       userRole,
+      learnerProfile,
     });
 
     importLog(brainlift.id, 'System prompt built', {
@@ -183,6 +191,21 @@ importAgentRouter.post(
           });
         } catch (err) {
           importError(brainlift.id, 'Failed to save conversation', err);
+        }
+
+        // Store conversation to Honcho for learner profile building (fire-and-forget)
+        if (userId) {
+          const sessionKey = `import-${brainlift.slug}`;
+          const honchoMessages = messages
+            .filter(m => m.role === 'user' || m.role === 'assistant')
+            .map(m => ({
+              role: m.role as 'user' | 'assistant',
+              content: m.parts
+                ?.filter((p: any) => p.type === 'text')
+                .map((p: any) => p.text || '')
+                .join(' ') || '',
+            }));
+          storeMessages(sessionKey, userId, 'import-agent', honchoMessages);
         }
 
         // Clean up temp file
@@ -273,6 +296,24 @@ importAgentRouter.post(
         total: allFacts.length,
         ungraded: ungradedFacts.length,
       });
+
+      // Store import completion observation to Honcho (fire-and-forget)
+      const importUserId = req.authContext?.userId;
+      if (importUserId) {
+        const allDok2sForObs = await storage.getDOK2Summaries(brainlift.id);
+        const allInsightsForObs = await storage.getDOK3Insights(brainlift.id);
+        storeObservation(
+          importUserId,
+          'import-complete',
+          `Import completed for "${brainlift.title}". DOK1 facts: ${allFacts.length}, DOK2 summaries: ${allDok2sForObs.length}, DOK3 insights: ${allInsightsForObs.length}.`,
+          {
+            brainliftId: brainlift.id,
+            dok1Count: allFacts.length,
+            dok2Count: allDok2sForObs.length,
+            dok3Count: allInsightsForObs.length,
+          }
+        );
+      }
 
       const failedUrlCache = new Map<string, string>();
       const dok1Limit = pLimit(60);

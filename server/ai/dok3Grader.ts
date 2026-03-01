@@ -21,6 +21,7 @@ import {
   buildTraceabilityUserPrompt,
 } from '../prompts/dok3-grading';
 import { callOpenRouterModel, extractJSON } from './llm-utils';
+import { getLearnerContextForGrading, storeObservation } from '../utils/honcho';
 
 export type DOK3ProgressCallback = (event: DOK3GradingProgress) => void;
 
@@ -252,7 +253,8 @@ export async function checkSourceTraceability(
 async function evaluateConceptualCoherence(
   context: DOK3EvaluationContext,
   foundationMetrics: FoundationMetrics,
-  traceability: TraceabilityResult
+  traceability: TraceabilityResult,
+  learnerContext?: string | null
 ): Promise<{ result: DOK3EvaluationResult; model: string }> {
   // Build traceability status string
   const traceabilityStatus = traceability.flagged
@@ -292,6 +294,7 @@ async function evaluateConceptualCoherence(
       },
       traceabilityStatus,
       previousEvaluation: null,
+      learnerContext,
     }
   );
 
@@ -388,6 +391,9 @@ export async function gradeDOK3Insight(
       throw new Error(`Insight ${insightId} has no linked DOK2 summaries`);
     }
 
+    // Fetch learner context from Honcho (non-blocking on failure)
+    const learnerContext = await getLearnerContextForGrading(brainliftId);
+
     // Step 1: Foundation Index
     onProgress?.({ stage: 'dok3:foundation', message: 'Computing foundation metrics...', insightId });
     const foundation = computeFoundationIndex(context);
@@ -401,7 +407,8 @@ export async function gradeDOK3Insight(
     const { result: evaluation, model: evaluatorModel } = await evaluateConceptualCoherence(
       context,
       foundation,
-      traceability
+      traceability,
+      learnerContext
     );
 
     // Step 4: Final Score
@@ -427,6 +434,17 @@ export async function gradeDOK3Insight(
     };
 
     await storage.saveDOK3GradeResult(insightId, gradeData);
+
+    // Store grading observation to Honcho (fire-and-forget)
+    const brainlift = await storage.getBrainliftById(brainliftId);
+    if (brainlift?.createdByUserId) {
+      storeObservation(
+        brainlift.createdByUserId,
+        'dok3-grading',
+        `DOK3 insight scored ${finalScore}/5. Framework: "${evaluation.framework_name}". ${evaluation.feedback}`,
+        { insightId, score: finalScore, frameworkName: evaluation.framework_name }
+      );
+    }
 
     console.log(`[DOK3-Grade] === Insight ${insightId} graded successfully ===`);
 

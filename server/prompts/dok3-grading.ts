@@ -160,6 +160,7 @@ interface DOK3EvidenceForPrompt {
   };
   traceabilityStatus: string;
   previousEvaluation: null; // Stubbed for future re-grading
+  learnerContext?: string | null;
 }
 
 /**
@@ -220,6 +221,11 @@ DOK2 Synthesis Score: ${metrics.dok2Score.toFixed(2)}/5
 Foundation Integrity Index: ${metrics.index.toFixed(2)}/5
 
 TRACEABILITY: ${evidence.traceabilityStatus}`;
+
+  // Append learner context if available
+  if (evidence.learnerContext) {
+    prompt += `\n\nLEARNER CONTEXT:\n${evidence.learnerContext}`;
+  }
 
   // Future: append previous evaluation for re-grading
   if (evidence.previousEvaluation) {

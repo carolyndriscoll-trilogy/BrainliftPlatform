@@ -347,7 +347,8 @@ export async function evaluateDOK4Quality(
   context: DOK4EvaluationContext,
   foundation: DOK4FoundationMetrics,
   traceability: DOK4TraceabilityResult,
-  vanillaResponse: string | null
+  vanillaResponse: string | null,
+  learnerContext?: string | null
 ): Promise<DOK4QualityResult> {
   // Build traceability status string
   const traceabilityStatus = traceability.status === 'flagged'
@@ -390,6 +391,7 @@ export async function evaluateDOK4Quality(
     },
     traceabilityStatus,
     vanillaResponse,
+    learnerContext,
   });
 
   // Try Opus primary, Sonnet fallback

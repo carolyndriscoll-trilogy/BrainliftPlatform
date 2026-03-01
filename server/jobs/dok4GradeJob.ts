@@ -8,6 +8,7 @@ import {
   evaluateDOK4Quality,
 } from '../ai/dok4Grader';
 import { recomputeBrainliftScore } from '../services/brainlift';
+import { getLearnerContextForGrading, storeObservation } from '../utils/honcho';
 
 const GATE_TIMEOUT_MS = 15 * 60 * 1000; // 15 minutes
 const INITIAL_POLL_MS = 2000;
@@ -84,6 +85,9 @@ export async function dok4GradeJob(
       throw new Error(`Submission ${submissionId} not found`);
     }
 
+    // Fetch learner context from Honcho (non-blocking on failure)
+    const learnerContext = await getLearnerContextForGrading(brainliftId);
+
     // Step 1: Foundation Integrity Index
     dok4GradingEmitter.emitEvent(brainliftId, {
       type: 'dok4:foundation',
@@ -137,7 +141,7 @@ export async function dok4GradeJob(
       message: 'Evaluating quality...',
     });
 
-    const quality = await evaluateDOK4Quality(context, foundation, traceability, vanillaResponse);
+    const quality = await evaluateDOK4Quality(context, foundation, traceability, vanillaResponse, learnerContext);
 
     // Step 5: Save results (ceiling already applied in evaluateDOK4Quality)
     await storage.saveDOK4QualityResult(submissionId, quality);
@@ -151,6 +155,17 @@ export async function dok4GradeJob(
     });
 
     helpers.logger.info(`[DOK4 Grade] Submission ${submissionId} graded: score=${quality.qualityScoreFinal} (raw=${quality.qualityScoreRaw}, ceiling=${foundation.ceiling})`);
+
+    // Store grading observation to Honcho (fire-and-forget)
+    const brainlift = await storage.getBrainliftById(brainliftId);
+    if (brainlift?.createdByUserId) {
+      storeObservation(
+        brainlift.createdByUserId,
+        'dok4-grading',
+        `DOK4 SPOV scored ${quality.qualityScoreFinal}/5 (raw: ${quality.qualityScoreRaw}). ${quality.qualityFeedback}`,
+        { submissionId, score: quality.qualityScoreFinal, rawScore: quality.qualityScoreRaw }
+      );
+    }
 
     // Queue COE job to run the multi-model jury evaluation
     try {

@@ -1,6 +1,7 @@
 import type { JobHelpers } from 'graphile-worker';
 import { storage } from '../storage';
 import { runLearningStreamSwarm } from '../ai/learning-stream-swarm';
+import { getLearnerContextForGrading } from '../utils/honcho';
 
 /**
  * Automated learning stream research job.
@@ -40,11 +41,16 @@ export async function learningStreamResearchJob(
       throw new Error(`Brainlift not found: ${brainliftId}`);
     }
 
+    // Fetch learner context from Honcho for personalized research
+    const learnerProfile = await getLearnerContextForGrading(brainliftId);
+
     // Run the swarm
-    const result = await runLearningStreamSwarm(brainliftId, {
-      maxTurns: 60,
-      maxBudgetUsd: 5.0,
-    });
+    const result = await runLearningStreamSwarm(
+      brainliftId,
+      { maxTurns: 60, maxBudgetUsd: 5.0 },
+      undefined,
+      learnerProfile
+    );
 
     helpers.logger.info('Learning stream swarm research completed', {
       brainliftId,
