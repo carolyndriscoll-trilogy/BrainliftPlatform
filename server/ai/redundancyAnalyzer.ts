@@ -103,6 +103,7 @@ Find redundant groups and identify the core non-redundant facts.`;
         temperature: 0.1,
         max_tokens: 4000,
       }),
+      signal: AbortSignal.timeout(120_000), // 2 minute timeout
     });
 
     if (!response.ok) {
