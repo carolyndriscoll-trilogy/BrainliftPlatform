@@ -133,7 +133,6 @@ importAgentRouter.post(
     const learnerProfile = userId
       ? await getLearnerContext(userId, 'import-agent')
       : null;
-    console.log(`[Honcho:Import] userId=${userId} learnerProfile=${learnerProfile ? `received (${learnerProfile.length} chars)` : 'null'}`);
 
     const systemPrompt = buildImportAgentSystemPrompt({
       brainlift,

@@ -124,7 +124,6 @@ export async function storeMessages(
 
     if (messageInputs.length > 0) {
       await session.addMessages(messageInputs);
-      console.log(`[Honcho:storeMessages] session=${sessionKey} agent=${agentName} messages=${messageInputs.length}`);
     }
   } catch (err: any) {
     console.error(`[Honcho] storeMessages failed for session ${sessionKey}: ${err.message}`);
@@ -159,7 +158,6 @@ export async function storeObservation(
     await agentPeer.conclusionsOf(studentPeerId).create({
       content: conclusionContent,
     });
-    console.log(`[Honcho:storeObservation] type=${type} agent=${agentName} student=${studentPeerId}`);
   } catch (err: any) {
     console.error(`[Honcho] storeObservation failed for user ${userId}: ${err.message}`);
   }

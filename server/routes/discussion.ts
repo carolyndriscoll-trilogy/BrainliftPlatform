@@ -50,7 +50,6 @@ discussionRouter.post(
     const learnerProfile = userId
       ? await getLearnerContext(userId, 'discussion-agent', { searchQuery: item.topic })
       : null;
-    console.log(`[Honcho:Discussion] userId=${userId} learnerProfile=${learnerProfile ? `received (${learnerProfile.length} chars)` : 'null'}`);
 
     const systemPrompt = buildDiscussionSystemPrompt(item, brainlift, learnerProfile);
     const tools = buildDiscussionTools(item, brainlift);
