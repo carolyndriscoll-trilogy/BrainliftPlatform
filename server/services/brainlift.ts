@@ -119,10 +119,11 @@ export async function runPostProcessingPipeline(
  *   - If only one category: use that single mean
  */
 export async function recomputeBrainliftScore(brainliftId: number): Promise<void> {
-  const [dok1Mean, dok2Mean, dok3Mean] = await Promise.all([
+  const [dok1Mean, dok2Mean, dok3Mean, dok4Mean] = await Promise.all([
     storage.getDOK1MeanScore(brainliftId),
     storage.getDOK2MeanScore(brainliftId),
     storage.getDOK3MeanScore(brainliftId),
+    storage.getDOK4MeanScore(brainliftId),
   ]);
 
   const brainlift = await storage.getBrainliftById(brainliftId);
@@ -131,8 +132,11 @@ export async function recomputeBrainliftScore(brainliftId: number): Promise<void
   let combinedMeanScore: string;
   const available: number[] = [];
 
-  if (dok3Mean !== null && dok1Mean !== null && dok2Mean !== null) {
-    // All three categories — weighted 33/34/33
+  if (dok4Mean !== null && dok3Mean !== null && dok2Mean !== null && dok1Mean !== null) {
+    // All four categories — equal 25% each
+    combinedMeanScore = (dok1Mean * 0.25 + dok2Mean * 0.25 + dok3Mean * 0.25 + dok4Mean * 0.25).toFixed(2);
+  } else if (dok3Mean !== null && dok1Mean !== null && dok2Mean !== null) {
+    // DOK1 + DOK2 + DOK3 — weighted 33/34/33
     combinedMeanScore = (dok1Mean * 0.33 + dok2Mean * 0.34 + dok3Mean * 0.33).toFixed(2);
   } else if (dok1Mean !== null && dok2Mean !== null) {
     // DOK1 + DOK2 only — 50/50
@@ -142,6 +146,7 @@ export async function recomputeBrainliftScore(brainliftId: number): Promise<void
     if (dok1Mean !== null) available.push(dok1Mean);
     if (dok2Mean !== null) available.push(dok2Mean);
     if (dok3Mean !== null) available.push(dok3Mean);
+    if (dok4Mean !== null) available.push(dok4Mean);
     combinedMeanScore = available.length > 0
       ? (available.reduce((a, b) => a + b, 0) / available.length).toFixed(2)
       : '0';
@@ -157,7 +162,7 @@ export async function recomputeBrainliftScore(brainliftId: number): Promise<void
     },
   });
 
-  console.log(`[Score] Recomputed brainlift ${brainliftId}: DOK1=${dok1Mean?.toFixed(2) ?? 'n/a'}, DOK2=${dok2Mean?.toFixed(2) ?? 'n/a'}, DOK3=${dok3Mean?.toFixed(2) ?? 'n/a'}, Combined=${combinedMeanScore}`);
+  console.log(`[Score] Recomputed brainlift ${brainliftId}: DOK1=${dok1Mean?.toFixed(2) ?? 'n/a'}, DOK2=${dok2Mean?.toFixed(2) ?? 'n/a'}, DOK3=${dok3Mean?.toFixed(2) ?? 'n/a'}, DOK4=${dok4Mean?.toFixed(2) ?? 'n/a'}, Combined=${combinedMeanScore}`);
 }
 
 export async function saveBrainliftFromAI(

@@ -854,6 +854,239 @@ export interface FactWithVerification extends Fact {
   };
 }
 
+// === DOK4 TABLES ===
+
+// DOK4 Status
+export const DOK4_STATUS = {
+  DRAFT: 'draft',
+  REJECTED: 'rejected',
+  PENDING: 'pending',
+  RUNNING: 'running',
+  COMPLETED: 'completed',
+  FAILED: 'failed',
+} as const;
+
+export type DOK4Status = typeof DOK4_STATUS[keyof typeof DOK4_STATUS];
+
+// DOK4 Pipeline Steps
+export const DOK4_PIPELINE_STEP = {
+  POV_VALIDATION: 'pov_validation',
+  FOUNDATION_INTEGRITY: 'foundation_integrity',
+  SOURCE_TRACEABILITY: 'source_traceability',
+  QUALITY_EVALUATION: 'quality_evaluation',
+  COGNITIVE_OWNERSHIP: 'cognitive_ownership',
+  SCORE_ADJUSTMENT: 'score_adjustment',
+  CONVERSION_EVALUATION: 'conversion_evaluation',
+} as const;
+
+export type DOK4PipelineStep = typeof DOK4_PIPELINE_STEP[keyof typeof DOK4_PIPELINE_STEP];
+
+// DOK4 Rejection Categories (from POV Validation Classifier)
+export const DOK4_REJECTION_CATEGORY = {
+  TAUTOLOGY: 'tautology',
+  DEFINITION: 'definition',
+  UNFALSIFIABLE: 'unfalsifiable',
+  OPINION_WITHOUT_EVIDENCE: 'opinion_without_evidence',
+  DOK3_MISCLASSIFICATION: 'dok3_misclassification',
+  NOT_A_CLAIM: 'not_a_claim',
+} as const;
+
+export type DOK4RejectionCategory = typeof DOK4_REJECTION_CATEGORY[keyof typeof DOK4_REJECTION_CATEGORY];
+
+// DOK4 Confidence Levels
+export const DOK4_CONFIDENCE = {
+  PROVISIONAL: 'provisional',
+  STANDARD: 'standard',
+  VERIFIED: 'verified',
+} as const;
+
+export type DOK4Confidence = typeof DOK4_CONFIDENCE[keyof typeof DOK4_CONFIDENCE];
+
+// DOK4 Models — separate from DOK3_MODELS
+export const DOK4_MODELS = {
+  // POV Validation + Traceability + S2 Vanilla (mid-tier)
+  GEMINI_FLASH: 'google/gemini-2.0-flash-001',
+  SONNET_MID: 'anthropic/claude-sonnet-4.5',
+  // Quality Evaluation (quality-tier)
+  OPUS: 'anthropic/claude-opus-4.6',
+  OPUS_FALLBACK: 'anthropic/claude-sonnet-4.5',
+  // COE Jury (cross-family, quality-tier)
+  COE_MODEL_1: 'anthropic/claude-opus-4.6',
+  COE_MODEL_2: 'google/gemini-2.5-pro',
+  COE_MODEL_3: 'openai/gpt-4o',
+} as const;
+
+export type DOK4Model = typeof DOK4_MODELS[keyof typeof DOK4_MODELS];
+
+// DOK4 Submissions — Primary DOK4 table
+export const dok4Submissions = pgTable("dok4_submissions", {
+  id: serial("id").primaryKey(),
+  brainliftId: integer("brainlift_id").notNull().references(() => brainlifts.id, { onDelete: "cascade" }),
+  text: text("text").notNull(),
+  status: text("status").$type<DOK4Status>().default('draft'),
+  currentStep: text("current_step").$type<DOK4PipelineStep>(),
+
+  // POV Validation
+  rejectionReason: text("rejection_reason"),
+  rejectionCategory: text("rejection_category").$type<DOK4RejectionCategory>(),
+  validatedAt: timestamp("validated_at"),
+
+  // Foundation Integrity
+  foundationIntegrityIndex: text("foundation_integrity_index"),
+  dok1ComponentScore: text("dok1_component_score"),
+  dok2ComponentScore: text("dok2_component_score"),
+  dok3ComponentScore: text("dok3_component_score"),
+  foundationCeiling: integer("foundation_ceiling"),
+
+  // Source Traceability
+  traceabilityStatus: text("traceability_status"),
+  traceabilityIsBorrowed: boolean("traceability_is_borrowed"),
+  traceabilityFlaggedSource: text("traceability_flagged_source"),
+  traceabilityOverlapSummary: text("traceability_overlap_summary"),
+
+  // Quality Evaluation
+  qualityScoreRaw: integer("quality_score_raw"),
+  qualityScoreFinal: integer("quality_score_final"),
+  qualityCriteria: jsonb("quality_criteria"),
+  s2DivergenceClassification: text("s2_divergence_classification"),
+  s2VanillaResponse: text("s2_vanilla_response"),
+  positionSummary: text("position_summary"),
+  frameworkDependency: text("framework_dependency"),
+  keyEvidence: jsonb("key_evidence"),
+  vulnerabilityPoints: jsonb("vulnerability_points"),
+  qualityRationale: text("quality_rationale"),
+  qualityFeedback: text("quality_feedback"),
+  qualityEvaluatorModel: text("quality_evaluator_model"),
+
+  // COE (Cognitive Ownership Evaluation)
+  ownershipAssessmentScore: integer("ownership_assessment_score"),
+  coePerAxisScores: jsonb("coe_per_axis_scores"),
+  coeConjunctiveFailure: boolean("coe_conjunctive_failure").default(false),
+  coeConjunctiveFailureAxis: text("coe_conjunctive_failure_axis"),
+  coeEvaluationTier: text("coe_evaluation_tier"),
+  coeAdjustment: integer("coe_adjustment"),
+  confidenceLevel: text("confidence_level").$type<DOK4Confidence>(),
+
+  // Antimemetic Conversion
+  conversionText: text("conversion_text"),
+  conversionRationale: text("conversion_rationale"),
+  conversionScore: integer("conversion_score"),
+  conversionCriteria: jsonb("conversion_criteria"),
+  conversionFeedback: text("conversion_feedback"),
+  conversionEvaluatorModel: text("conversion_evaluator_model"),
+  conversionSubmittedAt: timestamp("conversion_submitted_at"),
+  conversionGradedAt: timestamp("conversion_graded_at"),
+
+  // Cascading invalidation
+  needsRecalculation: boolean("needs_recalculation").default(false),
+  recalculationReason: text("recalculation_reason"),
+  recalculationTriggeredAt: timestamp("recalculation_triggered_at"),
+
+  // Error/retry state
+  errorCode: text("error_code"),
+  errorDetail: text("error_detail"),
+  retryCount: integer("retry_count").default(0),
+  lastAttemptAt: timestamp("last_attempt_at"),
+
+  // Timestamps
+  gradedAt: timestamp("graded_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+}, (table) => [
+  index("idx_dok4_submissions_brainlift").on(table.brainliftId),
+]);
+
+// DOK4 → DOK3 Links (with primary designation)
+export const dok4Dok3Links = pgTable("dok4_dok3_links", {
+  id: serial("id").primaryKey(),
+  submissionId: integer("submission_id").notNull().references(() => dok4Submissions.id, { onDelete: "cascade" }),
+  dok3InsightId: integer("dok3_insight_id").notNull().references(() => dok3Insights.id, { onDelete: "cascade" }),
+  isPrimary: boolean("is_primary").default(false),
+}, (table) => [
+  unique("dok4_dok3_links_unique").on(table.submissionId, table.dok3InsightId),
+  index("idx_dok4_dok3_links_submission").on(table.submissionId),
+  index("idx_dok4_dok3_links_dok3").on(table.dok3InsightId),
+]);
+
+// DOK4 → DOK2 Links
+export const dok4Dok2Links = pgTable("dok4_dok2_links", {
+  id: serial("id").primaryKey(),
+  submissionId: integer("submission_id").notNull().references(() => dok4Submissions.id, { onDelete: "cascade" }),
+  dok2SummaryId: integer("dok2_summary_id").notNull().references(() => dok2Summaries.id, { onDelete: "cascade" }),
+}, (table) => [
+  unique("dok4_dok2_links_unique").on(table.submissionId, table.dok2SummaryId),
+  index("idx_dok4_dok2_links_submission").on(table.submissionId),
+]);
+
+// DOK4 COE Model Scores — Per-model jury scores
+export const dok4CoeModelScores = pgTable("dok4_coe_model_scores", {
+  id: serial("id").primaryKey(),
+  submissionId: integer("submission_id").notNull().references(() => dok4Submissions.id, { onDelete: "cascade" }),
+  model: text("model").notNull(),
+  modelFamily: text("model_family").notNull(),
+  axisScores: jsonb("axis_scores").notNull(),
+  ownershipAssessment: text("ownership_assessment"),
+  feedback: text("feedback"),
+  status: text("status").default('pending'),
+  error: text("error"),
+  completedAt: timestamp("completed_at"),
+});
+
+// DOK4 Relations
+export const dok4SubmissionsRelations = relations(dok4Submissions, ({ one, many }) => ({
+  brainlift: one(brainlifts, {
+    fields: [dok4Submissions.brainliftId],
+    references: [brainlifts.id],
+  }),
+  dok3Links: many(dok4Dok3Links),
+  dok2Links: many(dok4Dok2Links),
+  coeModelScores: many(dok4CoeModelScores),
+}));
+
+export const dok4Dok3LinksRelations = relations(dok4Dok3Links, ({ one }) => ({
+  submission: one(dok4Submissions, {
+    fields: [dok4Dok3Links.submissionId],
+    references: [dok4Submissions.id],
+  }),
+  dok3Insight: one(dok3Insights, {
+    fields: [dok4Dok3Links.dok3InsightId],
+    references: [dok3Insights.id],
+  }),
+}));
+
+export const dok4Dok2LinksRelations = relations(dok4Dok2Links, ({ one }) => ({
+  submission: one(dok4Submissions, {
+    fields: [dok4Dok2Links.submissionId],
+    references: [dok4Submissions.id],
+  }),
+  dok2Summary: one(dok2Summaries, {
+    fields: [dok4Dok2Links.dok2SummaryId],
+    references: [dok2Summaries.id],
+  }),
+}));
+
+export const dok4CoeModelScoresRelations = relations(dok4CoeModelScores, ({ one }) => ({
+  submission: one(dok4Submissions, {
+    fields: [dok4CoeModelScores.submissionId],
+    references: [dok4Submissions.id],
+  }),
+}));
+
+// DOK4 Schemas
+export const insertDok4SubmissionSchema = createInsertSchema(dok4Submissions).omit({ id: true, createdAt: true });
+export const insertDok4Dok3LinkSchema = createInsertSchema(dok4Dok3Links).omit({ id: true });
+export const insertDok4Dok2LinkSchema = createInsertSchema(dok4Dok2Links).omit({ id: true });
+export const insertDok4CoeModelScoreSchema = createInsertSchema(dok4CoeModelScores).omit({ id: true });
+
+// DOK4 Types
+export type DOK4Submission = typeof dok4Submissions.$inferSelect;
+export type InsertDOK4Submission = z.infer<typeof insertDok4SubmissionSchema>;
+export type DOK4Dok3Link = typeof dok4Dok3Links.$inferSelect;
+export type InsertDOK4Dok3Link = z.infer<typeof insertDok4Dok3LinkSchema>;
+export type DOK4Dok2Link = typeof dok4Dok2Links.$inferSelect;
+export type InsertDOK4Dok2Link = z.infer<typeof insertDok4Dok2LinkSchema>;
+export type DOK4CoeModelScore = typeof dok4CoeModelScores.$inferSelect;
+export type InsertDOK4CoeModelScore = z.infer<typeof insertDok4CoeModelScoreSchema>;
+
 // === AUTHORIZATION ===
 
 export const USER_ROLES = {

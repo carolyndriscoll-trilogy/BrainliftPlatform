@@ -12,6 +12,7 @@ import * as learningStreamStorage from './learning-stream';
 import * as dok3Storage from './dok3';
 import * as importAgentStorage from './import-agent';
 import * as brainliftSourcesStorage from './brainlift-sources';
+import * as dok4Storage from './dok4';
 
 // Re-export types from base
 export type {
@@ -138,7 +139,27 @@ export const storage = {
   saveBrainliftSources: brainliftSourcesStorage.saveBrainliftSources,
   getBrainliftSources: brainliftSourcesStorage.getBrainliftSources,
   deleteBrainliftSources: brainliftSourcesStorage.deleteBrainliftSources,
+
+  // DOK4 Submissions
+  createDOK4Submission: dok4Storage.createDOK4Submission,
+  getDOK4Submissions: dok4Storage.getDOK4Submissions,
+  getDOK4SubmissionForBrainlift: dok4Storage.getDOK4SubmissionForBrainlift,
+  linkDOK4Submission: dok4Storage.linkDOK4Submission,
+  updateDOK4Status: dok4Storage.updateDOK4Status,
+  saveDOK4ValidationResult: dok4Storage.saveDOK4ValidationResult,
+  saveDOK4FoundationResult: dok4Storage.saveDOK4FoundationResult,
+  saveDOK4TraceabilityResult: dok4Storage.saveDOK4TraceabilityResult,
+  saveDOK4QualityResult: dok4Storage.saveDOK4QualityResult,
+  saveDOK4COEResult: dok4Storage.saveDOK4COEResult,
+  saveDOK4COEModelScore: dok4Storage.saveDOK4COEModelScore,
+  saveDOK4ScoreAdjustment: dok4Storage.saveDOK4ScoreAdjustment,
+  getDOK4EvaluationContext: dok4Storage.getDOK4EvaluationContext,
+  checkDOK4FoundationReady: dok4Storage.checkDOK4FoundationReady,
+  getDOK4MeanScore: dok4Storage.getDOK4MeanScore,
+  saveDOK4ConversionResult: dok4Storage.saveDOK4ConversionResult,
+  checkDOK4ConversionEligible: dok4Storage.checkDOK4ConversionEligible,
+  clearDOK4RecalculationFlag: dok4Storage.clearDOK4RecalculationFlag,
 };
 
 // Export individual modules for direct access if needed
-export { brainliftsStorage, expertsStorage, verificationsStorage, redundancyStorage, analyticsStorage, dok2Storage, sharesStorage, learningStreamStorage, dok3Storage, importAgentStorage, brainliftSourcesStorage };
+export { brainliftsStorage, expertsStorage, verificationsStorage, redundancyStorage, analyticsStorage, dok2Storage, sharesStorage, learningStreamStorage, dok3Storage, importAgentStorage, brainliftSourcesStorage, dok4Storage };

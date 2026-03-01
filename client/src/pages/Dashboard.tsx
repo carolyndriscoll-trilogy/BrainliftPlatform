@@ -4,7 +4,7 @@ import { Link, useSearch } from 'wouter';
 import { authClient } from '@/lib/auth-client';
 import { BrainliftVersion, type Fact } from '@shared/schema';
 import { AlertTriangle, FileText, Loader2 } from 'lucide-react';
-import { PiCompassToolFill } from 'react-icons/pi';
+import { PiCompassToolFill, PiLightbulbFilamentFill } from 'react-icons/pi';
 import { RiQuillPenAiFill } from 'react-icons/ri';
 import { FaBalanceScale } from 'react-icons/fa';
 import { MdDynamicFeed } from 'react-icons/md';
@@ -24,6 +24,8 @@ import { BrainliftTab } from '@/components/BrainliftTab';
 import { SummariesTab } from '@/components/SummariesTab';
 import { InsightsTab } from '@/components/InsightsTab';
 import { ScratchpadTab } from '@/components/ScratchpadTab';
+import { DOK4Tab } from '@/components/DOK4Tab';
+import { DOK4SubmitModal } from '@/components/DOK4SubmitModal';
 import { DOK3LinkingUI } from '@/components/DOK3LinkingUI';
 import { LearningStreamTab } from '@/components/LearningStreamTab';
 import { SavedItemsPage, GradedItemsPage } from '@/components/learning-stream';
@@ -32,6 +34,8 @@ import { usePDFExport } from '@/hooks/usePDFExport';
 import { useShareToken } from '@/hooks/useShareToken';
 import { useDOK3Insights } from '@/hooks/useDOK3Insights';
 import { useDOK3GradingEvents } from '@/hooks/useDOK3GradingEvents';
+import { useDOK4 } from '@/hooks/useDOK4';
+import { useDOK4GradingEvents } from '@/hooks/useDOK4GradingEvents';
 import { SidebarLayout, AppSidebar, type NavItem } from '@/components/layout';
 import { TactileButton } from '@/components/ui/tactile-button';
 
@@ -40,7 +44,7 @@ interface DashboardProps {
   isSharedView?: boolean;
 }
 
-const VALID_TABS = ['brainlift', 'grading', 'summaries', 'insights', 'scratchpad', 'contradictions', 'learning', 'learning-saved', 'learning-graded'] as const;
+const VALID_TABS = ['brainlift', 'grading', 'summaries', 'insights', 'dok4', 'scratchpad', 'contradictions', 'learning', 'learning-saved', 'learning-graded'] as const;
 type TabKey = typeof VALID_TABS[number];
 
 const NAV_ITEMS: NavItem[] = [
@@ -48,6 +52,7 @@ const NAV_ITEMS: NavItem[] = [
   { id: 'grading', label: 'DOK1 Facts', icon: PiCompassToolFill },
   { id: 'summaries', label: 'DOK2 Summaries', icon: RiQuillPenAiFill },
   { id: 'insights', label: 'DOK3 Insights', icon: DeskLampIcon },
+  { id: 'dok4', label: 'DOK4 SPOVs', icon: PiLightbulbFilamentFill },
   { id: 'scratchpad', label: 'Scratchpad', icon: ScratchpadIcon },
   { id: 'contradictions', label: 'Contradictions', icon: FaBalanceScale },
   {
@@ -175,6 +180,11 @@ const { downloadBrainliftPDF } = usePDFExport();
   // DOK3 Insights
   const dok3 = useDOK3Insights(slug);
   const dok3Events = useDOK3GradingEvents(slug, dok3.gradingInsights.length > 0);
+
+  // DOK4 SPOVs
+  const dok4 = useDOK4(slug);
+  const dok4Events = useDOK4GradingEvents(slug, dok4.runningSubmissions.length > 0);
+  const [showDOK4SubmitModal, setShowDOK4SubmitModal] = useState(false);
 
   // Redundancy detection
   const [showRedundancyModal, setShowRedundancyModal] = useState(false);
@@ -397,6 +407,20 @@ const { downloadBrainliftPDF } = usePDFExport();
         />
       )}
 
+      {/* DOK4 SPOVs Tab */}
+      {!isNotBrainlift && activeTab === 'dok4' && (
+        <DOK4Tab
+          submissions={dok4.submissions}
+          isLoading={dok4.isLoading}
+          meanScore={dok4.meanScore}
+          totalCount={dok4.totalCount}
+          highQualityCount={dok4.highQualityCount}
+          needsWorkCount={dok4.needsWorkCount}
+          latestEvent={dok4Events.latestEvent}
+          onNewSubmission={() => setShowDOK4SubmitModal(true)}
+        />
+      )}
+
       {/* Scratchpad Tab */}
       {!isNotBrainlift && activeTab === 'scratchpad' && (
         <ScratchpadTab
@@ -472,6 +496,16 @@ const { downloadBrainliftPDF } = usePDFExport();
         onClose={() => setShowShareModal(false)}
         slug={slug}
         isOwner={isOwner}
+      />
+
+      {/* DOK4 Submit Modal */}
+      <DOK4SubmitModal
+        show={showDOK4SubmitModal}
+        onClose={() => setShowDOK4SubmitModal(false)}
+        onSubmit={dok4.submit}
+        isSubmitting={dok4.isSubmitting}
+        insights={dok3.insights}
+        dok2Summaries={(data?.dok2Summaries ?? []) as any}
       />
 
       {/* DOK3 Linking Modal (standalone, outside import flow) */}

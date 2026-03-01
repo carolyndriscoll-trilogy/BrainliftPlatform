@@ -300,3 +300,56 @@ router.patch(
   })
 );
 ```
+
+---
+
+## DOK4 SPOVs (`server/routes/dok4.ts`)
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| `POST` | `/api/brainlifts/:slug/dok4` | `requireBrainliftModify` | Create DOK4 submission, run POV Validation, queue grading |
+| `GET` | `/api/brainlifts/:slug/dok4` | `requireBrainliftAccess` | List all DOK4 submissions |
+| `GET` | `/api/brainlifts/:slug/dok4/:id` | `requireBrainliftAccess` | Get single DOK4 submission with full evaluation data |
+| `POST` | `/api/brainlifts/:slug/dok4/:id/conversion` | `requireBrainliftModify` | Submit antimemetic conversion (gated: score >= 3) |
+| `GET` | `/api/brainlifts/:slug/dok4-grading-events` | `requireBrainliftAccess` | SSE stream for real-time grading progress |
+
+### POST `/api/brainlifts/:slug/dok4`
+
+**Body:**
+```json
+{
+  "text": "string (SPOV text)",
+  "dok3InsightIds": [1, 2],
+  "primaryDok3Id": 1,
+  "dok2SummaryIds": [3, 4, 5]
+}
+```
+
+**Validation:**
+- `text` required, non-empty string
+- `dok3InsightIds` non-empty array of integers
+- `primaryDok3Id` must be in `dok3InsightIds`
+- `dok2SummaryIds` minimum 2, from at least 2 different sources
+
+**Response (accepted):** `201 { accept: true, submission }`
+**Response (rejected):** `200 { accept: false, rejection_reason, rejection_category, submission }`
+
+### POST `/api/brainlifts/:slug/dok4/:id/conversion`
+
+**Body:**
+```json
+{ "text": "string (conversion text, min 10 chars)" }
+```
+
+**Gate conditions:** status = completed, qualityScoreFinal >= 3, needsRecalculation = false
+
+**Response:** `202 { queued: true, submissionId }`
+
+### Background Jobs
+
+| Job Name | Trigger | Description |
+|----------|---------|-------------|
+| `dok4:grade` | On DOK4 submission accepted | Foundation Integrity → Source Traceability → S2 Divergence → Quality Evaluation |
+| `dok4:coe` | After `dok4:grade` completes | 3-model COE jury → Score adjustment |
+| `dok4:conversion` | On conversion submission | Antimemetic conversion evaluation |
+| `dok4:recalculate-foundation` | Manual/triggered | Recompute foundation after linked data changes |

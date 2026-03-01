@@ -5,6 +5,10 @@ import { contentExtractJob } from './contentExtractJob';
 import { discussionVerifyFactJob } from './discussionVerifyFactJob';
 import { discussionGradeDok2Job } from './discussionGradeDok2Job';
 import { dok3GradeJob } from './dok3GradeJob';
+import { dok4GradeJob } from './dok4GradeJob';
+import { dok4COEJob } from './dok4COEJob';
+import { dok4ConversionJob } from './dok4ConversionJob';
+import { dok4RecalculateJob } from './dok4RecalculateJob';
 
 /**
  * Central registry of all background jobs.
@@ -23,6 +27,10 @@ const tasks = {
   'discussion:verify-fact': discussionVerifyFactJob,
   'discussion:grade-dok2': discussionGradeDok2Job,
   'dok3:grade': dok3GradeJob,
+  'dok4:grade': dok4GradeJob,
+  'dok4:coe': dok4COEJob,
+  'dok4:conversion': dok4ConversionJob,
+  'dok4:recalculate-foundation': dok4RecalculateJob,
 } as const;
 
 export default tasks;

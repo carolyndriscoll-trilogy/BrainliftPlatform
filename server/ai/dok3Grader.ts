@@ -9,7 +9,6 @@
  */
 
 import { z } from 'zod';
-import pRetry from 'p-retry';
 import pLimit from 'p-limit';
 import { DOK3_MODELS, type DOK3Model } from '@shared/schema';
 import type { DOK3GradingProgress } from '@shared/import-progress';
@@ -21,10 +20,9 @@ import {
   buildDOK3UserPrompt,
   buildTraceabilityUserPrompt,
 } from '../prompts/dok3-grading';
+import { callOpenRouterModel, extractJSON } from './llm-utils';
 
 export type DOK3ProgressCallback = (event: DOK3GradingProgress) => void;
-
-const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 
 // ─── Zod Validation ───────────────────────────────────────────────────────────
 
@@ -72,80 +70,6 @@ export interface DOK3GradeResult {
   traceabilityFlagged: boolean;
   traceabilityFlaggedSource: string | null;
   evaluatorModel: string;
-}
-
-// ─── Shared Helper: OpenRouter API Call ───────────────────────────────────────
-
-async function callOpenRouterModel(
-  model: DOK3Model | string,
-  systemPrompt: string,
-  userPrompt: string,
-  maxTokens: number
-): Promise<string> {
-  if (!OPENROUTER_API_KEY) {
-    throw new Error('OpenRouter API key not configured');
-  }
-
-  const run = async () => {
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-        'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://replit.com',
-      },
-      body: JSON.stringify({
-        model,
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt },
-        ],
-        temperature: 0.1,
-        max_tokens: maxTokens,
-      }),
-    });
-
-    if (!response.ok) {
-      if (response.status === 429) {
-        console.error(`[DOK3-Grade] 429 rate limit from ${model}`);
-        throw new Error(`RATE_LIMIT: ${model}`);
-      }
-      throw new Error(`API error: ${response.status}`);
-    }
-
-    const data = await response.json();
-    const content = data.choices?.[0]?.message?.content;
-
-    if (!content) {
-      throw new Error('No response content');
-    }
-
-    return content as string;
-  };
-
-  return pRetry(run, {
-    retries: 2,
-    onFailedAttempt: error => {
-      console.log(`[DOK3-Grade] Model ${model} attempt ${error.attemptNumber} failed. ${error.retriesLeft} retries left.`);
-    },
-  });
-}
-
-/**
- * Extract JSON from an LLM response, stripping markdown fences.
- */
-function extractJSON(raw: string): unknown {
-  let clean = raw
-    .replace(/```json\s*/gi, '')
-    .replace(/```\s*/g, '')
-    .trim();
-
-  const jsonMatch = clean.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) {
-    throw new Error('Could not find JSON in response');
-  }
-
-  return JSON.parse(jsonMatch[0]);
 }
 
 // ─── Step 1: Foundation Integrity Index ───────────────────────────────────────
