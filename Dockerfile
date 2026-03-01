@@ -20,5 +20,5 @@ RUN npm run build
 # Expose the port Railway will set
 EXPOSE ${PORT:-10000}
 
-# Start the production server
-CMD ["npm", "run", "start"]
+# Start with shell form so env vars are properly inherited
+CMD echo "ENV CHECK: OPENAI_API_KEY=${OPENAI_API_KEY:+SET} DATABASE_URL=${DATABASE_URL:+SET} OPENROUTER_API_KEY=${OPENROUTER_API_KEY:+SET} PORT=${PORT}" && npm run start
