@@ -54,6 +54,9 @@ All API endpoints (except `/api/auth/*`) require authentication via Better Auth 
 | PATCH | `/api/brainlifts/:slug/update` | `requireAuth` | Update brainlift from new file/URL |
 | PATCH | `/api/brainlifts/:slug/author` | `requireAuth` | Update author/owner |
 | GET | `/api/brainlifts/:slug/versions` | `requireAuth` | Get version history |
+| POST | `/api/brainlifts/create-blank` | `requireAuth` | Create blank builder brainlift |
+| PATCH | `/api/brainlifts/:slug/purpose` | `requireAuth` + modify | Update purpose fields |
+| POST | `/api/brainlifts/:slug/purpose/synthesize` | `requireAuth` + modify | AI-synthesize purpose statement |
 
 ### Pagination (GET `/api/brainlifts`)
 
@@ -89,6 +92,8 @@ All routes nested under `/api/brainlifts/:slug/experts` for authorization contex
 | PATCH | `/api/brainlifts/:slug/experts/:id/follow` | `requireAuth` | Update expert following status |
 | DELETE | `/api/brainlifts/:slug/experts/:id` | `requireAuth` | Delete an expert |
 | GET | `/api/brainlifts/:slug/experts/following` | `requireAuth` | Get followed experts only |
+| POST | `/api/brainlifts/:slug/experts` | `requireAuth` + modify | Create single expert (builder) |
+| PATCH | `/api/brainlifts/:slug/experts/:id` | `requireAuth` + modify | Update expert fields (builder) |
 
 ---
 

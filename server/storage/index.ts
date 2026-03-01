@@ -62,6 +62,8 @@ export const storage = {
   transferOwnershipToFirstEditor: sharesStorage.transferOwnershipToFirstEditor,
 
   // Experts
+  createExpert: expertsStorage.createExpert,
+  updateExpertForBrainlift: expertsStorage.updateExpertForBrainlift,
   getExpertsByBrainliftId: expertsStorage.getExpertsByBrainliftId,
   saveExperts: expertsStorage.saveExperts,
   getFollowedExperts: expertsStorage.getFollowedExperts,

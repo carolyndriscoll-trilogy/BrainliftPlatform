@@ -15,6 +15,8 @@ import {
 } from "../middleware/brainlift-auth";
 import { createSSEResponse } from "../utils/sse";
 import { STAGE_LABELS } from "@shared/import-progress";
+import { generateUniqueSlug } from "../utils/slug";
+import { synthesizePurpose } from "../ai/purpose";
 
 export const brainliftsRouter = Router();
 
@@ -276,5 +278,74 @@ brainliftsRouter.get(
   asyncHandler(async (req, res) => {
     const versions = await storage.getVersionsByBrainliftId(req.brainlift!.id);
     res.json(versions);
+  })
+);
+
+// Create blank brainlift for Builder flow
+brainliftsRouter.post(
+  '/api/brainlifts/create-blank',
+  requireAuth,
+  asyncHandler(async (req, res) => {
+    const title = req.body.title?.trim() || 'Untitled BrainLift';
+    const slug = await generateUniqueSlug(title);
+
+    const brainlift = await storage.createBrainlift(
+      {
+        slug,
+        title,
+        description: '',
+        summary: { totalFacts: 0, meanScore: '0', score5Count: 0, contradictionCount: 0 },
+        sourceType: 'builder',
+      },
+      [],
+      [],
+      req.authContext!.userId
+    );
+
+    res.status(201).json(brainlift);
+  })
+);
+
+// Update purpose fields for a brainlift
+brainliftsRouter.patch(
+  '/api/brainlifts/:slug/purpose',
+  requireAuth,
+  requireBrainliftModify,
+  asyncHandler(async (req, res) => {
+    const { purposeWhatLearning, purposeWhyMatters, purposeWhatAbleToDo, displayPurpose } = req.body;
+
+    const fields: Record<string, any> = {};
+    if (purposeWhatLearning !== undefined) fields.purposeWhatLearning = purposeWhatLearning;
+    if (purposeWhyMatters !== undefined) fields.purposeWhyMatters = purposeWhyMatters;
+    if (purposeWhatAbleToDo !== undefined) fields.purposeWhatAbleToDo = purposeWhatAbleToDo;
+    if (displayPurpose !== undefined) {
+      fields.displayPurpose = displayPurpose;
+      fields.description = displayPurpose; // backward compat
+    }
+
+    await storage.updateBrainliftFields(req.brainlift!.id, fields);
+    res.json({ success: true });
+  })
+);
+
+// Synthesize purpose statement from three prompts (AI)
+brainliftsRouter.post(
+  '/api/brainlifts/:slug/purpose/synthesize',
+  requireAuth,
+  requireBrainliftModify,
+  asyncHandler(async (req, res) => {
+    const { whatLearning, whyMatters, whatAbleToDo } = req.body;
+
+    if (!whatLearning && !whyMatters && !whatAbleToDo) {
+      throw new BadRequestError('At least one purpose field is required');
+    }
+
+    const purpose = await synthesizePurpose({
+      whatLearning: whatLearning || '',
+      whyMatters: whyMatters || '',
+      whatAbleToDo: whatAbleToDo || '',
+    });
+
+    res.json({ purpose });
   })
 );

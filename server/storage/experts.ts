@@ -4,6 +4,23 @@ import {
   type Expert, type InsertExpert
 } from './base';
 
+export async function createExpert(data: InsertExpert): Promise<Expert> {
+  const [expert] = await db.insert(experts).values(data as any).returning();
+  return expert;
+}
+
+export async function updateExpertForBrainlift(
+  expertId: number,
+  brainliftId: number,
+  fields: Partial<Pick<Expert, 'name' | 'who' | 'focus' | 'why' | 'where' | 'twitterHandle' | 'draftStatus'>>
+): Promise<Expert | null> {
+  const [updated] = await db.update(experts)
+    .set(fields as any)
+    .where(and(eq(experts.id, expertId), eq(experts.brainliftId, brainliftId)))
+    .returning();
+  return updated || null;
+}
+
 export async function getExpertsByBrainliftId(brainliftId: number): Promise<Expert[]> {
   return await db.select().from(experts)
     .where(eq(experts.brainliftId, brainliftId))

@@ -102,6 +102,10 @@ export const brainlifts = pgTable("brainlifts", {
   title: text("title").notNull(),
   description: text("description").notNull(),
   displayPurpose: text("display_purpose"),  // Short UI-friendly summary of purpose
+  purposeWhatLearning: text("purpose_what_learning"),
+  purposeWhyMatters: text("purpose_why_matters"),
+  purposeWhatAbleToDo: text("purpose_what_able_to_do"),
+  buildPhase: integer("build_phase").default(1),
   author: text("author"),
   createdByUserId: text("created_by_user_id").references(() => user.id), // Nullable for legacy/public brainlifts
   classification: text("classification").$type<Classification>().default('brainlift').notNull(),
@@ -195,6 +199,11 @@ export const experts = pgTable("experts", {
   source: text("source").notNull(), // "listed" (from brainlift) or "verification" (from fact notes)
   twitterHandle: text("twitter_handle"), // Optional X/Twitter handle
   isFollowing: boolean("is_following").notNull().default(true), // Auto-follow if rank > 5
+  who: text("who"), // Credentials/background
+  focus: text("focus"), // Areas of expertise
+  why: text("why"), // Relevance to this BrainLift
+  where: text("where"), // Links (Twitter, website, etc.)
+  draftStatus: text("draft_status").$type<'draft' | 'complete'>().default('draft'),
 });
 
 // Brainlift Sharing - User-specific and token-based access control

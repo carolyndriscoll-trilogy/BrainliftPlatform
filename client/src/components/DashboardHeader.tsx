@@ -92,6 +92,9 @@ interface DashboardHeaderProps {
   isOwner?: boolean;
   setShowShareModal?: (show: boolean) => void;
   canModify?: boolean;
+  viewMode?: 'build' | 'view';
+  onViewModeChange?: (mode: 'build' | 'view') => void;
+  isBuilderBrainlift?: boolean;
 }
 
 export function DashboardHeader({
@@ -110,6 +113,9 @@ export function DashboardHeader({
   isOwner,
   setShowShareModal,
   canModify = true,
+  viewMode,
+  onViewModeChange,
+  isBuilderBrainlift,
 }: DashboardHeaderProps) {
   const { title, description, displayPurpose } = data;
 
@@ -189,6 +195,31 @@ export function DashboardHeader({
 
         {/* Action Buttons - Right aligned, bottom of header */}
         <div className="flex gap-2 items-end flex-wrap shrink-0 self-end">
+          {/* View mode toggle - only for builder brainlifts */}
+          {isBuilderBrainlift && onViewModeChange && (
+            <div className="flex rounded-md border border-border overflow-hidden mr-2">
+              <button
+                onClick={() => onViewModeChange('build')}
+                className={`px-3 py-1.5 text-[12px] font-medium border-none cursor-pointer transition-colors ${
+                  viewMode === 'build'
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-transparent text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                Build
+              </button>
+              <button
+                onClick={() => onViewModeChange('view')}
+                className={`px-3 py-1.5 text-[12px] font-medium border-none border-l border-border cursor-pointer transition-colors ${
+                  viewMode === 'view'
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-transparent text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                View
+              </button>
+            </div>
+          )}
           {/* Primary Action: Update */}
           {canModify && !isSharedView && !isNotBrainlift && (
             <TactileButton

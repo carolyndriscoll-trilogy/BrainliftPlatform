@@ -104,6 +104,64 @@ expertsRouter.delete(
   })
 );
 
+// Create a single expert (Builder flow)
+expertsRouter.post(
+  '/api/brainlifts/:slug/experts',
+  requireAuth,
+  requireBrainliftModify,
+  asyncHandler(async (req, res) => {
+    const { name, who, focus, why, where, twitterHandle } = req.body;
+
+    if (!name?.trim()) {
+      throw new BadRequestError('Expert name is required');
+    }
+
+    const expert = await storage.createExpert({
+      brainliftId: req.brainlift!.id,
+      name: name.trim(),
+      source: 'manual',
+      isFollowing: true,
+      who: who || null,
+      focus: focus || null,
+      why: why || null,
+      where: where || null,
+      twitterHandle: twitterHandle || null,
+      draftStatus: 'draft',
+    });
+
+    res.status(201).json(expert);
+  })
+);
+
+// Update a single expert (Builder flow)
+expertsRouter.patch(
+  '/api/brainlifts/:slug/experts/:id',
+  requireAuth,
+  requireBrainliftModify,
+  asyncHandler(async (req, res) => {
+    const expertId = parseInt(req.params.id);
+    if (isNaN(expertId)) {
+      throw new BadRequestError('Invalid expert ID');
+    }
+
+    const { name, who, focus, why, where, twitterHandle, draftStatus } = req.body;
+    const fields: Record<string, any> = {};
+    if (name !== undefined) fields.name = name;
+    if (who !== undefined) fields.who = who;
+    if (focus !== undefined) fields.focus = focus;
+    if (why !== undefined) fields.why = why;
+    if (where !== undefined) fields.where = where;
+    if (twitterHandle !== undefined) fields.twitterHandle = twitterHandle;
+    if (draftStatus !== undefined) fields.draftStatus = draftStatus;
+
+    const updated = await storage.updateExpertForBrainlift(expertId, req.brainlift!.id, fields);
+    if (!updated) {
+      throw new NotFoundError('Expert not found');
+    }
+    res.json(updated);
+  })
+);
+
 // Get followed experts for a brainlift (used by tweet search)
 expertsRouter.get(
   '/api/brainlifts/:slug/experts/following',

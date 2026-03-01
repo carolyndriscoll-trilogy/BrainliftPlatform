@@ -29,6 +29,7 @@ import { DOK4SubmitModal } from '@/components/DOK4SubmitModal';
 import { DOK3LinkingUI } from '@/components/DOK3LinkingUI';
 import { LearningStreamTab } from '@/components/LearningStreamTab';
 import { SavedItemsPage, GradedItemsPage } from '@/components/learning-stream';
+import { BuilderView } from '@/components/builder/BuilderView';
 import { usePDFExport } from '@/hooks/usePDFExport';
 import { useShareToken } from '@/hooks/useShareToken';
 import { useDOK3Insights } from '@/hooks/useDOK3Insights';
@@ -76,6 +77,26 @@ export default function Dashboard({ slug, isSharedView = false }: DashboardProps
     const tab = params.get('tab');
     return tab && VALID_TABS.includes(tab as TabKey) ? tab : 'brainlift';
   }, [searchString]);
+
+  // URL-synced view mode (?mode=build)
+  const viewMode = useMemo(() => {
+    const params = new URLSearchParams(searchString);
+    return params.get('mode') === 'build' ? 'build' : 'view';
+  }, [searchString]);
+
+  const setViewMode = useCallback((mode: 'build' | 'view') => {
+    const params = new URLSearchParams(window.location.search);
+    if (mode === 'build') {
+      params.set('mode', 'build');
+    } else {
+      params.delete('mode');
+      params.delete('phase');
+    }
+    const newSearch = params.toString();
+    const newUrl = newSearch ? `?${newSearch}` : window.location.pathname;
+    window.history.replaceState(null, '', newUrl);
+    window.dispatchEvent(new PopStateEvent('popstate'));
+  }, []);
 
   // URL-synced expanded item (?view=123)
   const viewingItemId = useMemo(() => {
@@ -270,6 +291,9 @@ const { downloadBrainliftPDF } = usePDFExport();
           isOwner={isOwner}
           setShowShareModal={setShowShareModal}
           canModify={canModify}
+          viewMode={viewMode}
+          onViewModeChange={setViewMode}
+          isBuilderBrainlift={data.sourceType === 'builder'}
         />
       }
     >
@@ -291,8 +315,13 @@ const { downloadBrainliftPDF } = usePDFExport();
         </div>
       )}
 
+      {/* Builder View */}
+      {viewMode === 'build' && (
+        <BuilderView data={data} slug={slug} />
+      )}
+
       {/* Brainlift Tab - Original Document */}
-      {!isNotBrainlift && activeTab === 'brainlift' && (
+      {viewMode !== 'build' && !isNotBrainlift && activeTab === 'brainlift' && (
         <BrainliftTab
           originalContent={data.originalContent}
           sourceType={data.sourceType}
@@ -302,7 +331,7 @@ const { downloadBrainliftPDF } = usePDFExport();
       )}
 
       {/* Grading Tab */}
-      {!isNotBrainlift && activeTab === 'grading' && (
+      {viewMode !== 'build' && !isNotBrainlift && activeTab === 'grading' && (
         <div>
           {/* Flags/Warnings - Compact inline callouts */}
           {data?.flags && data.flags.length > 0 && (
@@ -335,7 +364,7 @@ const { downloadBrainliftPDF } = usePDFExport();
       )}
 
       {/* Summaries Tab - DOK2 owner interpretations */}
-      {!isNotBrainlift && activeTab === 'summaries' && (
+      {viewMode !== 'build' && !isNotBrainlift && activeTab === 'summaries' && (
         <SummariesTab
           summaries={data.dok2Summaries ?? []}
           facts={facts}
@@ -344,7 +373,7 @@ const { downloadBrainliftPDF } = usePDFExport();
       )}
 
       {/* DOK3 Insights Tab */}
-      {!isNotBrainlift && activeTab === 'insights' && (
+      {viewMode !== 'build' && !isNotBrainlift && activeTab === 'insights' && (
         <InsightsTab
           insights={dok3.insights}
           isLoading={dok3.isLoading}
@@ -364,7 +393,7 @@ const { downloadBrainliftPDF } = usePDFExport();
       )}
 
       {/* DOK4 SPOVs Tab */}
-      {!isNotBrainlift && activeTab === 'dok4' && (
+      {viewMode !== 'build' && !isNotBrainlift && activeTab === 'dok4' && (
         <DOK4Tab
           submissions={dok4.submissions}
           isLoading={dok4.isLoading}
@@ -378,7 +407,7 @@ const { downloadBrainliftPDF } = usePDFExport();
       )}
 
       {/* Scratchpad Tab */}
-      {!isNotBrainlift && activeTab === 'scratchpad' && (
+      {viewMode !== 'build' && !isNotBrainlift && activeTab === 'scratchpad' && (
         <ScratchpadTab
           items={dok3.scratchpadItems}
           isLoading={dok3.isScratchpadLoading}
@@ -386,7 +415,7 @@ const { downloadBrainliftPDF } = usePDFExport();
       )}
 
       {/* Contradictions Tab - Card-based styled design */}
-      {!isNotBrainlift && activeTab === 'contradictions' && (
+      {viewMode !== 'build' && !isNotBrainlift && activeTab === 'contradictions' && (
         <ContradictionsTab
           contradictionClusters={contradictionClusters}
           setActiveTab={setActiveTab}
@@ -394,15 +423,15 @@ const { downloadBrainliftPDF } = usePDFExport();
       )}
 
       {/* Learning Stream Tab - AI-curated resources */}
-      {!isNotBrainlift && activeTab === 'learning' && (
+      {viewMode !== 'build' && !isNotBrainlift && activeTab === 'learning' && (
         <LearningStreamTab slug={slug} canModify={canModify} setActiveTab={setActiveTab} viewingItemId={viewingItemId} setViewingItemId={setViewingItemId} />
       )}
 
       {/* Learning Stream Sub-Pages */}
-      {!isNotBrainlift && activeTab === 'learning-saved' && (
+      {viewMode !== 'build' && !isNotBrainlift && activeTab === 'learning-saved' && (
         <SavedItemsPage slug={slug} canModify={canModify} viewingItemId={viewingItemId} setViewingItemId={setViewingItemId} />
       )}
-      {!isNotBrainlift && activeTab === 'learning-graded' && (
+      {viewMode !== 'build' && !isNotBrainlift && activeTab === 'learning-graded' && (
         <GradedItemsPage slug={slug} viewingItemId={viewingItemId} setViewingItemId={setViewingItemId} />
       )}
 

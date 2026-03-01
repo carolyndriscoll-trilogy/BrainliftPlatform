@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from 'react';
-import { X, Upload, FileText, Link as LinkIcon, File } from 'lucide-react';
+import { X, Upload, FileText, Link as LinkIcon, File, Hammer } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { tokens } from '@/lib/colors';
 import { useImportWithProgress } from '@/hooks/useImportWithProgress';
@@ -38,10 +38,34 @@ export function AddBrainliftModal({ show, onClose, onSuccess }: AddBrainliftModa
   const [error, setError] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const [isCreatingBlank, setIsCreatingBlank] = useState(false);
+
   const importWithProgress = useImportWithProgress();
 
   const isLinkingMode = !!importWithProgress.dok3LinkingInfo;
   const isExpanded = isLinkingMode;
+
+  const handleBuildFromScratch = useCallback(async () => {
+    setIsCreatingBlank(true);
+    try {
+      const res = await fetch('/api/brainlifts/create-blank', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({}),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.message || 'Failed to create brainlift');
+      }
+      const data = await res.json();
+      onClose();
+      onSuccess(`${data.slug}?mode=build&phase=1`);
+    } catch (err: any) {
+      setError(err.message || 'Failed to create brainlift');
+    } finally {
+      setIsCreatingBlank(false);
+    }
+  }, [onClose, onSuccess]);
 
   const resetAll = useCallback(() => {
     setActiveTab('workflowy');
@@ -179,9 +203,26 @@ export function AddBrainliftModal({ show, onClose, onSuccess }: AddBrainliftModa
                 </button>
               </div>
 
-              <p className="text-muted-foreground text-sm mb-5">
-                Add New Brainlift to Grade DOK1 facts and create a curated reading list.
-              </p>
+              {/* Build from Scratch option */}
+              <button
+                onClick={handleBuildFromScratch}
+                disabled={isCreatingBlank}
+                className="w-full mb-5 p-3.5 rounded-lg border border-dashed border-primary/30 bg-primary/5 hover:bg-primary/10 transition-colors cursor-pointer flex items-center gap-3 text-left"
+              >
+                <Hammer size={18} className="text-primary shrink-0" />
+                <div>
+                  <div className="text-sm font-semibold text-foreground">Build from Scratch</div>
+                  <div className="text-[12px] text-muted-foreground mt-0.5">
+                    Create a new BrainLift using the guided builder
+                  </div>
+                </div>
+              </button>
+
+              <div className="flex items-center gap-3 mb-5">
+                <div className="flex-1 h-px bg-border" />
+                <span className="text-[11px] uppercase tracking-[0.15em] text-muted-foreground">or import</span>
+                <div className="flex-1 h-px bg-border" />
+              </div>
 
               {/* Underline tabs */}
               <div className="relative z-10 mb-5">

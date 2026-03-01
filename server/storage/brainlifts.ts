@@ -236,6 +236,13 @@ export async function updateBrainliftFields(id: number, fields: {
     score5Count: number;
     contradictionCount: number;
   };
+  title?: string;
+  description?: string;
+  displayPurpose?: string | null;
+  purposeWhatLearning?: string | null;
+  purposeWhyMatters?: string | null;
+  purposeWhatAbleToDo?: string | null;
+  buildPhase?: number;
 }): Promise<void> {
   await db.update(brainlifts)
     .set(fields)
