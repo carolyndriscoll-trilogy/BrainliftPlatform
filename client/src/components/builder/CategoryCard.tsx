@@ -52,7 +52,7 @@ export function CategoryCard({
   });
 
   const handleAddSource = async () => {
-    await onCreateSource({ categoryId: category.id, title: '' });
+    await onCreateSource({ categoryId: category.id, title: 'New Source' });
   };
 
   return (

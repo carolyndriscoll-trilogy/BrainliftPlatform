@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { ChevronDown, Plus, Trash2, Link as LinkIcon } from 'lucide-react';
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
 import { useAutoSave } from '@/hooks/useAutoSave';
@@ -108,34 +108,13 @@ export function SourceCard({
         <CollapsibleContent>
           <div className="px-3 pb-3 space-y-3">
             {/* Facts section */}
-            <div className="border-l-2 border-l-dok1 pl-3 py-2 space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] uppercase tracking-wider font-semibold text-dok1">Facts</span>
-                <button
-                  onClick={() => onCreateFact({ sourceId: source.id, text: '' })}
-                  className="flex items-center gap-1 text-[11px] text-dok1 hover:text-dok1/80 bg-transparent border-none cursor-pointer font-medium"
-                >
-                  <Plus size={12} />
-                  Add Fact
-                </button>
-              </div>
-              {source.facts.length === 0 ? (
-                <p className="text-xs text-muted-foreground/60 italic m-0">
-                  No facts yet. Add key facts from this source.
-                </p>
-              ) : (
-                <div className="space-y-1.5">
-                  {source.facts.map((fact) => (
-                    <FactInput
-                      key={fact.id}
-                      fact={fact}
-                      onUpdate={onUpdateFact}
-                      onDelete={onDeleteFact}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
+            <FactsSection
+              sourceId={source.id}
+              facts={source.facts}
+              onCreateFact={onCreateFact}
+              onUpdateFact={onUpdateFact}
+              onDeleteFact={onDeleteFact}
+            />
 
             {/* Summary section */}
             <SummarySection
@@ -150,5 +129,82 @@ export function SourceCard({
         </CollapsibleContent>
       </div>
     </Collapsible>
+  );
+}
+
+function FactsSection({
+  sourceId,
+  facts,
+  onCreateFact,
+  onUpdateFact,
+  onDeleteFact,
+}: {
+  sourceId: number;
+  facts: BuilderFact[];
+  onCreateFact: (data: { sourceId: number; text: string }) => Promise<void>;
+  onUpdateFact: (id: number, fields: { text: string }) => Promise<void>;
+  onDeleteFact: (id: number) => Promise<void>;
+}) {
+  const [newFactText, setNewFactText] = useState('');
+  const [isCreating, setIsCreating] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleCreateFact = async () => {
+    const trimmed = newFactText.trim();
+    if (!trimmed || isCreating) return;
+    setIsCreating(true);
+    try {
+      await onCreateFact({ sourceId, text: trimmed });
+      setNewFactText('');
+      setTimeout(() => inputRef.current?.focus(), 50);
+    } finally {
+      setIsCreating(false);
+    }
+  };
+
+  return (
+    <div className="border-l-2 border-l-dok1 pl-3 py-2 space-y-2">
+      <span className="text-[11px] uppercase tracking-wider font-semibold text-dok1">Facts</span>
+      {facts.length === 0 && !newFactText && (
+        <p className="text-xs text-muted-foreground/60 italic m-0">
+          No facts yet. Add key facts from this source.
+        </p>
+      )}
+      {facts.length > 0 && (
+        <div className="space-y-1.5">
+          {facts.map((fact) => (
+            <FactInput
+              key={fact.id}
+              fact={fact}
+              onUpdate={onUpdateFact}
+              onDelete={onDeleteFact}
+            />
+          ))}
+        </div>
+      )}
+      <div className="flex items-center gap-2">
+        <input
+          ref={inputRef}
+          type="text"
+          value={newFactText}
+          onChange={(e) => setNewFactText(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') handleCreateFact();
+          }}
+          placeholder="Type a fact and press Enter..."
+          className="flex-1 bg-transparent border-b border-dashed border-border text-sm text-foreground px-1 py-1.5 focus:outline-none focus:border-dok1 transition-colors placeholder:text-muted-foreground/40"
+        />
+        {newFactText.trim() && (
+          <button
+            onClick={handleCreateFact}
+            disabled={isCreating}
+            className="flex items-center gap-1 text-[11px] text-dok1 hover:text-dok1/80 bg-transparent border-none cursor-pointer font-medium shrink-0"
+          >
+            <Plus size={12} />
+            Add
+          </button>
+        )}
+      </div>
+    </div>
   );
 }

@@ -21,7 +21,7 @@ export function KnowledgeTreePhase({ data, slug }: KnowledgeTreePhaseProps) {
   const categories = data.knowledgeTree?.categories || [];
 
   const handleAddCategory = async () => {
-    await createCategory({ name: '' });
+    await createCategory({ name: 'New Category' });
   };
 
   const handleUpdateCategory = async (id: number, fields: { name: string }) => {
