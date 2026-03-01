@@ -28,7 +28,7 @@ Below the BrainLift sits the **Learning Stream** — the automated discovery lay
 ```
 client/           React 18 + TypeScript, TanStack Query, Tailwind, Framer Motion
 server/
-  routes/         Domain-based Express routers (brainlifts, experts, verifications, shares, learning-stream, discussion)
+  routes/         Domain-based Express routers (brainlifts, experts, verifications, shares, learning-stream, discussion, knowledge-tree)
   services/       Business logic, orchestration
   storage/        Drizzle ORM, domain-split with facade pattern
   ai/             LLM integrations (fact verification, DOK2 grading, expert extraction, research swarm)
@@ -41,7 +41,7 @@ migrations/       PostgreSQL migrations (Drizzle Kit)
 
 ### Storage Facade
 
-The storage layer is split by domain — `brainlifts.ts`, `experts.ts`, `verifications.ts`, `learning-stream.ts`, etc. — but exposed through a single `storage` object in `storage/index.ts`. This means every import in the codebase reads `import { storage } from '../storage'`, keeping call sites clean while the underlying modules can grow independently. Adding a new domain is one file and one line in the facade.
+The storage layer is split by domain — `brainlifts.ts`, `experts.ts`, `verifications.ts`, `learning-stream.ts`, `knowledge-tree.ts`, etc. — but exposed through a single `storage` object in `storage/index.ts`. This means every import in the codebase reads `import { storage } from '../storage'`, keeping call sites clean while the underlying modules can grow independently. Adding a new domain is one file and one line in the facade.
 
 ### Type-Safe Background Jobs
 
@@ -78,6 +78,65 @@ After extraction, a post-processing pipeline runs in parallel:
 - **Learning Stream research** — automatically queues a multi-agent research swarm to find relevant sources (covered below).
 
 All of this fires immediately after import. By the time the user reviews their BrainLift, facts are already being verified, experts ranked, and research agents deployed.
+
+---
+
+## BrainLift Builder — Native Authoring Flow
+
+The Builder is an alternative to importing from WorkFlowy or Google Docs. Instead of uploading a pre-written document, students construct their BrainLift from scratch through a guided six-phase workflow. Builder brainlifts use `sourceType: 'builder'` and are created via the "Build from Scratch" button in the Add BrainLift modal.
+
+### Build Phases
+
+| Phase | Label | What It Covers |
+|-------|-------|----------------|
+| 1 | You & Your Mission | Structured purpose prompts — what you're learning, why it matters, what you'll be able to do |
+| 2 | Your Experts | Add subject-matter experts with who/focus/why/where fields, draft→complete lifecycle |
+| 3 | Knowledge Tree | Four-layer nested structure: Categories → Sources → Facts (DOK1) → Your Take (DOK2) |
+| 4 | Connections | *Stubbed — future phase* |
+| 5 | Blueprints | *Stubbed — future phase* |
+| 6 | Your Stance | *Stubbed — future phase* |
+
+### Phase 3: Knowledge Tree
+
+The Knowledge Tree is the core content authoring interface. It's a collapsible nested structure with four layers, each color-coded by DOK level:
+
+```
+Category (forest green border — DOK2 color)
+  └── Source (slate blue border — DOK1 color)
+        ├── Facts section (blue left-border) — individual DOK1 claims
+        └── Your Take section (green left-border) — DOK2 synthesis
+```
+
+**Categories** are top-level organizational containers (e.g., "Cognitive Load Theory", "Retrieval Practice"). Users create them manually; AI-suggested category chips are planned for a future iteration.
+
+**Sources** live inside categories and represent a single reference (title + optional URL). Each source contains its own facts and summaries.
+
+**Facts (DOK1)** are individual verifiable claims extracted from a source. They auto-save on change (debounced 1500ms) and blur (immediate). Verification and grading are deferred to a future phase.
+
+**Your Take (DOK2)** is a per-source synthesis — the student's own interpretation of the facts. One summary per source, auto-saved with the same debounce pattern.
+
+### Schema
+
+Four tables support the tree: `builder_categories`, `builder_sources`, `builder_facts`, `builder_summaries`. All include a denormalized `brainliftId` column for IDOR-safe single-query authorization (`WHERE id = ? AND brainlift_id = ?`). Foreign keys cascade on delete — removing a category removes all its sources, facts, and summaries.
+
+The full tree is fetched in 4 queries (categories, sources, facts, summaries for the brainlift) and grouped in memory to avoid N+1. Returns `undefined` for brainlifts with no categories.
+
+### API
+
+14 REST endpoints under `/api/brainlifts/:slug/` handle CRUD for all four entity types. Categories and sources auto-assign `sortOrder`/`sequenceId` on creation. All endpoints use the standard middleware chain (`requireAuth` → `requireBrainliftModify` → `asyncHandler`).
+
+### Frontend
+
+- **`KnowledgeTreePhase`** — orchestrator component with empty state and category list
+- **`CategoryCard`** — collapsible container with inline-editable name, contains source cards
+- **`SourceCard`** — collapsible container with editable title/URL, contains facts and summary
+- **`FactInput`** — single fact row with auto-save
+- **`SummarySection`** — "Add Your Take" button or auto-saving textarea
+- **`useKnowledgeTree(slug)`** — domain hook with 12 mutations (create/update/delete for all 4 entity types)
+
+### Auto-Save Pattern
+
+All editable fields use the `useAutoSave` hook: debounced saves on keystroke (1500ms delay), immediate save on blur. The hook returns a `saveStatus` ("saved" | "saving" | "unsaved") displayed as a subtle indicator in the UI.
 
 ---
 
@@ -516,7 +575,7 @@ React 18 with TypeScript. TanStack Query for server state. Tailwind with a custo
 - **Split-panel views** — the expanded learning stream item uses a resizable split (content left, discussion right)
 - **Inline editing** — author names, expert following status, and human grade overrides are editable in place
 - **Content-type detection** — the content viewer handles YouTube, Spotify, Apple Podcasts, Twitter embeds, article markdown, and PDFs through a discriminated union type
-- **Domain hooks** — each domain (`useBrainlift`, `useExperts`, `useLearningStream`, `useDiscussion`, etc.) encapsulates queries + mutations and returns a clean API surface
+- **Domain hooks** — each domain (`useBrainlift`, `useExperts`, `useLearningStream`, `useDiscussion`, `useBuilder`, `useKnowledgeTree`, etc.) encapsulates queries + mutations and returns a clean API surface
 
 ### Design Language
 
