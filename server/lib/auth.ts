@@ -11,6 +11,7 @@ export const auth = betterAuth({
     ...(process.env.TRUSTED_ORIGINS || "").split(",").filter(Boolean),
     process.env.BETTER_AUTH_URL || "http://localhost:5000",
     "http://localhost:3001",
+    "https://brainliftplatform.up.railway.app",
   ],
   database: drizzleAdapter(db, {
     provider: "pg",
