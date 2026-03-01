@@ -1,6 +1,16 @@
 // Load environment variables from .env file (must be first!)
 import "dotenv/config";
 
+// Prevent OpenAI SDK from crashing the process if OPENAI_API_KEY is not set.
+// The SDK throws at construction time when no key is found. Features that need
+// OpenAI will fail gracefully at call time instead of killing the server.
+if (!process.env.OPENAI_API_KEY) {
+  process.env.OPENAI_API_KEY = "not-configured";
+}
+
+// Log available env vars at startup (keys only, not values)
+console.log(`[startup] Env vars: ${Object.keys(process.env).sort().join(', ')}`);
+
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
