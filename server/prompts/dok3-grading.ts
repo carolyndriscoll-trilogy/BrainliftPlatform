@@ -90,9 +90,11 @@ SCORING INSTRUCTIONS:
   best matches your assessment, then use the criteria to justify or adjust.
 - You MUST reference the Foundation Integrity Index in your rationale. If the
   foundation is weak, explain how that affects your confidence in the insight.
-- If the TRACEABILITY field indicates a flag, weigh this seriously. An insight
-  that restates a single source's conclusion is at best a 2 unless the student
-  demonstrably extends beyond that source.
+- If the TRACEABILITY field indicates a flag, consider it as one signal among
+  many. A flag means the insight's core claim may appear in a source, but the
+  student may still be extending, reframing, or combining it with other evidence
+  in a novel way. Weigh the traceability flag alongside V2 (distinguishability)
+  and P1 (explanatory power) — do not treat it as an automatic score cap.
 - Your rationale must cite specific DOK1 facts or DOK2 summaries as evidence
   for your assessment. Do not make abstract claims about quality.
 

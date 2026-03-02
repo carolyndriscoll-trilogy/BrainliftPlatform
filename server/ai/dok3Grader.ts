@@ -238,10 +238,20 @@ export async function checkSourceTraceability(
     )
   );
 
-  const flaggedResult = results.find(r => r.flagged);
-  if (flaggedResult) {
-    console.log(`[DOK3-Grade] Traceability FLAGGED: "${flaggedResult.sourceName}" — ${flaggedResult.reasoning}`);
-    return { flagged: true, flaggedSource: flaggedResult.sourceName };
+  const flaggedResults = results.filter(r => r.flagged);
+  const flaggedCount = flaggedResults.length;
+  const totalSources = results.length;
+
+  console.log(`[DOK3-Grade] Traceability: ${flaggedCount}/${totalSources} sources flagged`);
+
+  // Only flag when a majority of linked sources contain the insight.
+  // A single source flagging out of many actually suggests the insight IS cross-source.
+  const majorityFlagged = totalSources > 0 && flaggedCount > totalSources / 2;
+
+  if (majorityFlagged) {
+    const flaggedSource = flaggedResults[0].sourceName;
+    console.log(`[DOK3-Grade] Traceability FLAGGED (majority ${flaggedCount}/${totalSources}): "${flaggedSource}"`);
+    return { flagged: true, flaggedSource };
   }
 
   console.log('[DOK3-Grade] Traceability: clear');
