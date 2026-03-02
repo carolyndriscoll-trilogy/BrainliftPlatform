@@ -118,7 +118,7 @@ export function CategoryCard({
             )}
 
             <TactileButton
-              variant="flat"
+              variant="inset"
               onClick={handleAddSource}
               className="flex items-center gap-1.5 text-xs"
             >
