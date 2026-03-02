@@ -71,7 +71,21 @@ export async function callOpenRouterModel(
 }
 
 /**
+ * Sanitize common LLM JSON quirks (trailing commas, comments, etc.).
+ */
+function sanitizeJSON(json: string): string {
+  return json
+    // Strip single-line comments (// ...)
+    .replace(/\/\/[^\n]*/g, '')
+    // Strip multi-line comments (/* ... */)
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    // Strip trailing commas before } or ]
+    .replace(/,\s*([\]}])/g, '$1');
+}
+
+/**
  * Extract JSON from an LLM response, stripping markdown fences.
+ * Handles common LLM quirks: trailing commas, comments, code fences.
  */
 export function extractJSON(raw: string): unknown {
   const clean = raw
@@ -84,8 +98,16 @@ export function extractJSON(raw: string): unknown {
     throw new Error('Could not find JSON in response');
   }
 
+  // Try strict parse first
   try {
     return JSON.parse(jsonMatch[0]);
+  } catch {
+    // Fall back to sanitized parse
+  }
+
+  const sanitized = sanitizeJSON(jsonMatch[0]);
+  try {
+    return JSON.parse(sanitized);
   } catch (err: any) {
     throw new Error(`Failed to parse JSON from LLM response: ${err.message}`);
   }
