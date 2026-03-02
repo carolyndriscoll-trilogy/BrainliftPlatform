@@ -148,13 +148,13 @@ describe('extractTextFromHTML', () => {
     expect(result).toContain('- Item 2');
   });
 
-  it('handles nested lists', () => {
+  it('handles nested lists with correct indentation', () => {
     const html = '<ul><li>Parent<ul><li>Child</li></ul></li></ul>';
     const result = extractTextFromHTML(html);
-    expect(result).toContain('Parent');
-    expect(result).toContain('Child');
-    // Both items extracted with list markers
-    expect(result.split('\n')).toHaveLength(2);
+    const lines = result.split('\n');
+    expect(lines).toHaveLength(2);
+    expect(lines[0]).toBe('- Parent');
+    expect(lines[1]).toBe('  - Child');
   });
 
   it('strips script tags', () => {
@@ -194,5 +194,15 @@ describe('extractTextFromHTML', () => {
 
   it('returns empty string for empty input', () => {
     expect(extractTextFromHTML('')).toBe('');
+  });
+});
+
+// ─── parseWorkflowyExportHTML: text after last tag ──────────────
+
+describe('parseWorkflowyExportHTML text boundary', () => {
+  it('preserves text after the last HTML tag in a node name', () => {
+    const html = `<ul><li><div class="name" data-wfid="x"><span class="innerContentContainer"><b>bold</b> trailing text</span></div></li></ul>`;
+    const { hierarchy } = parseWorkflowyExportHTML(html);
+    expect(hierarchy[0].name).toContain('trailing text');
   });
 });

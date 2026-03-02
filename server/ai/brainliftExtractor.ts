@@ -220,7 +220,12 @@ export function getIndentLevel(line: string): number {
 }
 
 export function cleanHeader(line: string): string {
-  return line.trim().replace(/^[-•*]\s*/, '').replace(/^#+\s*/, '').replace(/\*\*+/g, '').replace(/[:]$/, '').trim();
+  return line.trim()
+    .replace(/\*\*+/g, '')         // strip bold markers FIRST
+    .replace(/^[-•*]\s*/, '')      // then strip leading bullet
+    .replace(/^#+\s*/, '')         // strip heading prefix
+    .replace(/[:]+$/, '')          // strip ALL trailing colons
+    .trim();
 }
 
 export function extractUrl(line: string): string | null {

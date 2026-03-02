@@ -174,8 +174,9 @@ export function parseWorkflowyExportHTML(htmlContent: string): { markdown: strin
     if (frame && (isCollectingName() || isCollectingNote())) {
       const textStart = tagRegex.lastIndex;
       const nextTagIdx = htmlContent.indexOf('<', textStart);
-      if (nextTagIdx > textStart) {
-        const text = htmlContent.substring(textStart, nextTagIdx);
+      const endIdx = nextTagIdx === -1 ? htmlContent.length : nextTagIdx;
+      if (endIdx > textStart) {
+        const text = htmlContent.substring(textStart, endIdx);
         if (text.trim()) {
           if (isCollectingName()) frame.nameHtml += text;
           else if (isCollectingNote()) frame.noteHtml += text;
@@ -252,6 +253,11 @@ export function extractTextFromHTML(htmlContent: string): string {
 
     if (tagName === 'ul' || tagName === 'ol') {
       if (!isClosing) {
+        if (inListItem && currentText.trim()) {
+          const indent = '  '.repeat(Math.max(0, listDepth - 1));
+          lines.push(indent + '- ' + currentText.trim());
+          currentText = '';
+        }
         listDepth++;
       } else {
         listDepth = Math.max(0, listDepth - 1);
@@ -301,18 +307,22 @@ export function extractTextFromHTML(htmlContent: string): string {
     lines.push(currentText.trim());
   }
 
-  // Decode HTML entities and clean up
+  // Decode HTML entities and clean up, preserving list indentation
   return lines
-    .map(line => line
-      .replace(/&nbsp;/g, ' ')
-      .replace(/&amp;/g, '&')
-      .replace(/&lt;/g, '<')
-      .replace(/&gt;/g, '>')
-      .replace(/&quot;/g, '"')
-      .replace(/&#39;/g, "'")
-      .replace(/\s+/g, ' ')
-      .trim()
-    )
+    .map(line => {
+      const indentMatch = line.match(/^(\s*)/);
+      const indent = indentMatch ? indentMatch[1] : '';
+      const content = line.slice(indent.length)
+        .replace(/&nbsp;/g, ' ')
+        .replace(/&amp;/g, '&')
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'")
+        .replace(/\s+/g, ' ')
+        .trim();
+      return indent + content;
+    })
     .filter(line => line.length > 0)
     .join('\n');
 }

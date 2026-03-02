@@ -161,7 +161,7 @@ export function findAncestorContext(
     // Stop if we've found both
     if (category && source) break;
 
-    current = parentMap.get(current.id);
+    current = parentMap.get(current.id) ?? null;
   }
 
   // FALLBACK: If no explicit Category marker found, infer from DOK1's parent
@@ -650,7 +650,7 @@ export function extractDOK3Insights(roots: HierarchyNode[]): DOK3ExtractedInsigh
     for (const child of dok3Node.children) {
       // Skip marker nodes
       if (child.isDOK1Marker || child.isDOK2Marker || child.isDOK3Marker || child.isDOK4Marker ||
-          child.isSourceMarker || child.isCategoryMarker) {
+          child.isSourceMarker || child.isCategoryMarker || child.isPurposeMarker) {
         continue;
       }
 
@@ -711,7 +711,7 @@ export function extractDOK4SPOVs(roots: HierarchyNode[]): DOK4ExtractedSPOV[] {
     for (const child of dok4Node.children) {
       // Skip marker nodes
       if (child.isDOK1Marker || child.isDOK2Marker || child.isDOK3Marker || child.isDOK4Marker ||
-          child.isSourceMarker || child.isCategoryMarker) {
+          child.isSourceMarker || child.isCategoryMarker || child.isPurposeMarker) {
         continue;
       }
 

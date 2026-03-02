@@ -47,6 +47,18 @@ describe('cleanHeader', () => {
   it('strips dot bullets', () => {
     expect(cleanHeader('• Source 3')).toBe('Source 3');
   });
+
+  it('strips standalone bold markers', () => {
+    expect(cleanHeader('**Category 1**')).toBe('Category 1');
+  });
+
+  it('strips bold before bullet so bold+bullet combo works', () => {
+    expect(cleanHeader('* **Category 1**')).toBe('Category 1');
+  });
+
+  it('strips multiple trailing colons', () => {
+    expect(cleanHeader('Category 1::')).toBe('Category 1');
+  });
 });
 
 describe('extractUrl', () => {

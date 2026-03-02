@@ -318,6 +318,14 @@ describe('extractDOK3Insights', () => {
     const dok3 = makeNode({ id: 'd3', name: 'DOK 3', isDOK3Marker: true, children: [short] });
     expect(extractDOK3Insights([dok3])).toHaveLength(0);
   });
+
+  it('skips purposeMarker children', () => {
+    const purpose = makeNode({ id: 'pm', name: 'Purpose', isPurposeMarker: true });
+    const insight = makeNode({ id: 'i1', name: 'A real cross-source insight about pedagogy and curriculum design' });
+    const dok3 = makeNode({ id: 'd3', name: 'DOK 3', isDOK3Marker: true, children: [purpose, insight] });
+    const result = extractDOK3Insights([dok3]);
+    expect(result).toHaveLength(1);
+  });
 });
 
 // ─── extractDOK4SPOVs ───────────────────────────────────────────
@@ -339,6 +347,14 @@ describe('extractDOK4SPOVs', () => {
     const short = makeNode({ id: 's', name: 'Too short' });
     const dok4 = makeNode({ id: 'd4', name: 'DOK 4', isDOK4Marker: true, children: [short] });
     expect(extractDOK4SPOVs([dok4])).toHaveLength(0);
+  });
+
+  it('skips purposeMarker children', () => {
+    const purpose = makeNode({ id: 'pm', name: 'Purpose', isPurposeMarker: true });
+    const spov = makeNode({ id: 's1', name: 'My spiky point of view is that standardized testing fails to measure real learning' });
+    const dok4 = makeNode({ id: 'd4', name: 'DOK 4', isDOK4Marker: true, children: [purpose, spov] });
+    const result = extractDOK4SPOVs([dok4]);
+    expect(result).toHaveLength(1);
   });
 });
 
