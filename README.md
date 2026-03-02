@@ -219,6 +219,113 @@ The BrainLift's overall score is a 50/50 weighted average of the DOK1 mean (fact
 
 ---
 
+## DOK3 Grading — Cross-Source Insight Evaluation
+
+DOK3 grading evaluates whether a student's cross-source insights genuinely transcend individual sources. DOK3 sits "above the bright line" — it represents the student's unique conceptual framework rather than source-bound synthesis. The grading pipeline is described in the DOK3 grading specification and shares architectural patterns with DOK4 (foundation integrity, source traceability, quality evaluation).
+
+---
+
+## DOK4 Grading — Spiky Point of View Evaluation
+
+DOK4 grading evaluates Spiky Points of View — clear, defensible positions on contested topics where informed people disagree. The pipeline assesses both the intellectual substance of the position and whether the student demonstrably owns it, using a multi-phase evaluation with a cross-family model jury.
+
+### Submission Requirements
+
+A DOK4 submission requires:
+- The SPOV text itself (minimum 10 characters)
+- Links to at least one DOK3 insight (with a designated primary)
+- Links to at least two DOK2 summaries from **different sources** (enforcing the cross-source requirement — a position built on a single source isn't a Spiky POV)
+
+Before grading begins, the system runs a synchronous POV validation check. If the text is a vague topic statement rather than a defensible stance, the submission is rejected with a specific reason and category. Only validated submissions proceed to the asynchronous grading pipeline.
+
+### Phase 1: Foundation Integrity Index
+
+The foundation score establishes a ceiling on how high the SPOV can score, based on the quality of the knowledge it's built on:
+
+```
+Index = (0.25 × DOK1 mean) + (0.35 × DOK2 mean) + (0.40 × primary DOK3 score)
+```
+
+DOK1 scores are deduplicated by fact ID (each fact counted once). The primary DOK3 insight carries 40% of the weight — the largest share — because DOK4 positions should grow directly out of cross-source insights.
+
+The index maps to a ceiling:
+
+| Foundation Index | Ceiling |
+|-----------------|---------|
+| 4.0+ | 5 |
+| 3.0 -- 3.9 | 4 |
+| 2.0 -- 2.9 | 3 |
+| Below 2.0 | 2 |
+
+Weak foundations impose a hard cap. A brilliant position built on shaky facts and shallow summaries still can't score above 3.
+
+### Phase 2: Source Traceability
+
+Parallel LLM calls (up to 10 sources) check whether the SPOV merely restates a conclusion from a single source rather than synthesizing across multiple. A borrowed position is flagged but not automatically failed — the flag feeds into the quality evaluation as context.
+
+### Phase 3: S2 Divergence Check
+
+The system converts the SPOV into a question, then asks a baseline model (Gemini Flash) to answer it cold — no student context, no BrainLift data. The vanilla response establishes what a generic AI would say. The quality evaluator then uses this to assess whether the student's position adds genuine novelty beyond what AI already knows. This is the "S2" criterion: does the position diverge from the stock AI response?
+
+### Phase 4: Quality Evaluation
+
+A quality-tier model (Claude Opus, with Sonnet fallback) evaluates the SPOV against six criteria spanning two dimensions — Intellectual Spikiness and Defensibility. The evaluator receives the full context: the SPOV text, all linked DOK2 summaries with their DOK1 facts, the primary DOK3 insight, the BrainLift's purpose, the foundation metrics, the traceability result, and the vanilla AI response for divergence comparison.
+
+The evaluator produces a raw quality score (1--5) which is then clamped by the foundation ceiling. A raw 5 with a ceiling of 3 becomes a 3.
+
+### Phase 5: Multi-Model Cognitive Ownership Evaluation
+
+This is the distinctive feature of DOK4 grading. Three quality-tier models from **different model families** — Claude Opus (Anthropic), Gemini 2.5 Pro (Google), and GPT-4o (OpenAI) — independently evaluate 19 binary criteria across four axes:
+
+| Axis | Criteria | Focus |
+|------|----------|-------|
+| Evidence Grounding | 5 | Is the position rooted in evidence? |
+| Reasoning Depth | 5 | Is the reasoning sophisticated? |
+| Epistemic Honesty | 5 | Does the student know what they don't know? |
+| Argumentative Coherence | 4 | Does the argument hold together? |
+
+Each criterion is binary (MET or NOT MET). The three models run in parallel. Per-axis scores are aggregated using a **trimmed mean** — the middle value of three, dropping the highest and lowest. This produces an Ownership Assessment Score from 0 to 19.
+
+The cross-family design is intentional: different model families have different biases and blind spots. Agreement across Anthropic, Google, and OpenAI models is a stronger signal than agreement within a single family. If fewer than three models succeed, the system falls back to a regular mean of available scores.
+
+**Conjunctive failure**: if any single axis scores below 2, the evaluation flags a conjunctive failure regardless of the total score. A student who scores 15/19 overall but 1/5 on Epistemic Honesty still gets penalized — you can't compensate for a fundamental blind spot with strength elsewhere.
+
+### Score Adjustment
+
+The ownership score translates to a ±1 adjustment on the quality score:
+
+| Ownership Score | Adjustment |
+|----------------|------------|
+| 15+ | +1 (can push past foundation ceiling) |
+| 10 -- 14 | No change |
+| Below 10 or conjunctive failure | -1 |
+
+The +1 adjustment intentionally breaks the ceiling. A student with a foundation ceiling of 4 but exceptional demonstrated ownership (15+) can reach a final score of 5. The rationale: if the jury of three independent AI models agrees you deeply own this position, that evidence overrides a merely adequate foundation score. The -1 adjustment floors at 1.
+
+### Antimemetic Conversion Score
+
+Available only after the quality pipeline completes with a score of 3 or higher, the Antimemetic Conversion Score evaluates a separate skill: can the student make their inherently complex, contrarian position *transmissible* without losing substance?
+
+The student submits a conversion — their attempt to communicate the SPOV to a skeptical audience. A quality-tier model evaluates five criteria (2 points each, 10 total raw):
+
+- **Barrier Identification** — did they diagnose specific barriers to acceptance?
+- **Genuine Barriers** — do the barriers reflect real cognitive/social resistance?
+- **Conversion Quality** — did they use concrete strategies (analogy, reframing, narrative)?
+- **Audience Calibration** — neither condescending nor assuming expert knowledge?
+- **Substance Preservation** — is the intellectual core intact, not diluted?
+
+The 0--10 raw score maps to a 1--5 final score. Conversion is gated behind quality ≥ 3 to prevent viral packaging of weak positions.
+
+### Cascading Recalculation
+
+When foundation data changes — a DOK1 fact gets re-verified, a DOK2 summary gets regraded, or a DOK3 insight score updates — the system flags the DOK4 submission as `needsRecalculation`. A background job recomputes the Foundation Integrity Index, reclamps the quality score to the new ceiling, and re-applies the COE adjustment if it was previously run. The stored raw quality score means the evaluator doesn't need to re-run — only the math changes.
+
+### Real-Time Progress
+
+The frontend connects via SSE to receive live events as each phase completes: foundation computation, traceability checks, S2 divergence, quality evaluation, COE jury, score adjustment, and final completion. The grading pipeline typically takes 30--60 seconds end-to-end, with the COE jury (three parallel quality-tier model calls) being the longest phase.
+
+---
+
 ## Learning Stream — Multi-Agent Research Swarm
 
 The Learning Stream surfaces relevant, high-quality sources aligned to each BrainLift's purpose. It uses the Claude Agent SDK to orchestrate a swarm of parallel research agents — each one a specialized AI that searches, evaluates, and saves a single resource independently.
@@ -553,6 +660,10 @@ The platform uses Graphile Worker (PostgreSQL-backed) for async processing:
 | `brainlift:generate-image` | Manual | Generate AI cover image |
 | `discussion:verify-fact` | Discussion tool call | Verify a fact the student articulated |
 | `discussion:grade-dok2` | Discussion tool call | Grade a DOK2 summary the student wrote |
+| `dok4:grade` | DOK4 submission | Foundation, traceability, S2 divergence, quality evaluation |
+| `dok4:coe` | After dok4:grade | Multi-model cognitive ownership jury |
+| `dok4:conversion` | Conversion submission | Antimemetic conversion evaluation |
+| `dok4:recalculate` | Foundation data changes | Recompute foundation index and reclamp scores |
 | `defense:review` | Evidence submission | Vet sources, generate counterarguments, infer field |
 | `defense:evaluate` | Round 12 completion | Run evaluator against transcript |
 
