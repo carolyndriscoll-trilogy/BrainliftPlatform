@@ -376,11 +376,6 @@ export async function evaluateDOK4Quality(
       sourceName: d.sourceName,
       grade: d.grade,
       points: d.points,
-      dok1Facts: d.dok1Facts.map(f => ({
-        fact: f.fact,
-        score: f.score,
-        verificationScore: f.verificationScore,
-      })),
     })),
     sourceEvidence: sourceEvidenceForPrompt,
     foundationMetrics: {
@@ -478,7 +473,6 @@ export async function evaluateCognitiveOwnership(
     linkedDok2s: context.linkedDok2s.map(d => ({
       sourceName: d.sourceName,
       points: d.points,
-      dok1Facts: d.dok1Facts.map(f => ({ fact: f.fact, score: f.score })),
     })),
     brainliftPurpose: context.brainliftPurpose,
   });

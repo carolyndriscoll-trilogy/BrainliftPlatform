@@ -14,10 +14,10 @@ You will evaluate the student's SPOV against 4 axes with 19 binary criteria tota
 EVALUATION AXES:
 
 1. EVIDENCE GROUNDING (E1-E5) — Is the position rooted in evidence?
-   E1: The SPOV references or builds upon specific DOK1 facts, not just vague allusions
+   E1: The SPOV references or builds upon specific evidence from the student's DOK2/DOK3 analysis, not just vague allusions
    E2: The reasoning chain from evidence to conclusion is traceable
    E3: The student distinguishes between strong and weak evidence in their foundation
-   E4: Counter-evidence from the student's own DOK1/DOK2 is acknowledged, not ignored
+   E4: Counter-evidence from the student's own DOK2/DOK3 is acknowledged, not ignored
    E5: The position uses evidence proportionally — extraordinary claims have proportional support
 
 2. REASONING DEPTH (R1-R5) — Is the reasoning sophisticated?
@@ -86,7 +86,6 @@ export function buildDOK4COEUserPrompt(params: {
   linkedDok2s: Array<{
     sourceName: string;
     points: string[];
-    dok1Facts: Array<{ fact: string; score: number }>;
   }>;
   brainliftPurpose: string;
 }): string {
@@ -96,8 +95,7 @@ export function buildDOK4COEUserPrompt(params: {
 
   const evidenceSection = params.linkedDok2s.map(d => {
     const points = d.points.map((p, i) => `  ${i + 1}. ${p}`).join('\n');
-    const facts = d.dok1Facts.map(f => `  - (score: ${f.score}/5) ${f.fact}`).join('\n');
-    return `Source: ${d.sourceName}\nDOK2 Points:\n${points}\nDOK1 Facts:\n${facts}`;
+    return `Source: ${d.sourceName}\nDOK2 Summary:\n${points}`;
   }).join('\n\n');
 
   return `BRAINLIFT PURPOSE:

@@ -36,10 +36,10 @@ Intellectual Spikiness — Is this a real position?
       than just observation?
 
 Defensibility — Can it withstand scrutiny?
-  D1: EVIDENCE BASE — Is the SPOV supported by the student's DOK1-DOK3 evidence?
-      The position need not be proven, but the student should be able to trace the
-      reasoning from their evidence to their conclusion. Check: does the evidence
-      actually support this claim, or is the student making a leap?
+  D1: EVIDENCE BASE — Is the SPOV supported by the student's DOK2 summaries and
+      DOK3 framework? The position need not be proven, but the student should be
+      able to trace the reasoning from their synthesis to their conclusion. Check:
+      does the evidence actually support this claim, or is the student making a leap?
 
 QUALITY LEVELS:
 
@@ -75,7 +75,7 @@ SCORING INSTRUCTIONS:
   Weigh this seriously.
 - If the traceability check flagged a source, the student may be borrowing a position
   rather than constructing their own. Weigh this seriously.
-- Your rationale must cite specific DOK1/DOK2/DOK3 evidence.
+- Your rationale must cite specific DOK2/DOK3 evidence.
 
 Respond ONLY with this JSON. No markdown. No backticks. No preamble.
 {
@@ -91,7 +91,7 @@ Respond ONLY with this JSON. No markdown. No backticks. No preamble.
   "s2_divergence_classification": "agree|partially_agree|disagree",
   "position_summary": "One sentence summarizing the student's position",
   "framework_dependency": "One sentence describing how this SPOV connects to the student's DOK3 framework",
-  "key_evidence": ["array of 2-4 specific pieces of evidence from the student's DOK1/DOK2/DOK3"],
+  "key_evidence": ["array of 2-4 specific pieces of evidence from the student's DOK2/DOK3"],
   "vulnerability_points": ["array of 1-3 weaknesses or counter-arguments the student should address"],
   "rationale": "A paragraph explaining how the criteria informed your score. Reference specific evidence. Address foundation integrity and traceability.",
   "feedback": "One specific, actionable recommendation. Tell the student exactly what to strengthen."
@@ -109,7 +109,6 @@ export function buildDOK4QualityUserPrompt(params: {
     sourceName: string;
     grade: number | null;
     points: string[];
-    dok1Facts: Array<{ fact: string; score: number; verificationScore: number | null }>;
   }>;
   sourceEvidence: Map<string, { sourceName: string; content: string }>;
   foundationMetrics: {
@@ -128,25 +127,16 @@ export function buildDOK4QualityUserPrompt(params: {
     return `${prefix}${d.frameworkName ? `"${d.frameworkName}": ` : ''}${d.text} (score: ${d.score ?? 'ungraded'}/5)`;
   }).join('\n');
 
-  // Build linked evidence section
+  // Build linked evidence section (DOK2 summaries only — DOK1 feeds into DOK2, not evaluated directly)
   const linkedEvidence = params.linkedDok2s.map(dok2 => {
     const pointsText = dok2.points.length > 0
       ? dok2.points.map((p, i) => `${i + 1}. ${p}`).join('\n')
       : 'No summary points available.';
 
-    const factsText = dok2.dok1Facts.length > 0
-      ? dok2.dok1Facts.map(f =>
-        `- (extraction: ${f.score}/5, verification: ${f.verificationScore ?? 'n/a'}/5) ${f.fact}`
-      ).join('\n')
-      : 'No DOK1 facts available for this source.';
-
     return `---
 Source: ${dok2.sourceName}
 DOK2 Summary (grade: ${dok2.grade ?? 'ungraded'}/5):
 ${pointsText}
-
-DOK1 Facts from this source:
-${factsText}
 ---`;
   }).join('\n\n');
 
@@ -176,9 +166,8 @@ SOURCE CONTENT:
 ${sourceContent}
 
 FOUNDATION METRICS:
-DOK1 Component Score: ${m.dok1Score.toFixed(2)}/5
-DOK2 Component Score: ${m.dok2Score.toFixed(2)}/5
-DOK3 Component Score: ${m.dok3Score.toFixed(2)}/5
+DOK2 Synthesis Score: ${m.dok2Score.toFixed(2)}/5
+DOK3 Framework Score: ${m.dok3Score.toFixed(2)}/5
 Foundation Integrity Index: ${m.index.toFixed(4)}
 
 TRACEABILITY: ${params.traceabilityStatus}
