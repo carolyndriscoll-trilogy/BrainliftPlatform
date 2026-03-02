@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { ChevronDown, Plus, Trash2 } from 'lucide-react';
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
 import { useAutoSave } from '@/hooks/useAutoSave';
@@ -39,6 +39,15 @@ export function CategoryCard({
 }: CategoryCardProps) {
   const [isOpen, setIsOpen] = useState(true);
   const [name, setName] = useState(category.name);
+  const nameInputRef = useRef<HTMLInputElement>(null);
+
+  // Auto-focus and select text for newly created categories
+  useEffect(() => {
+    if (category.name === 'New Category' && nameInputRef.current) {
+      nameInputRef.current.focus();
+      nameInputRef.current.select();
+    }
+  }, []);
 
   const handleSave = useCallback(async (data: { name: string }) => {
     if (data.name.trim() && data.name !== category.name) {
@@ -67,6 +76,7 @@ export function CategoryCard({
             />
             <div className="flex-1 min-w-0" onClick={(e) => e.stopPropagation()}>
               <input
+                ref={nameInputRef}
                 type="text"
                 value={name}
                 onChange={(e) => {
