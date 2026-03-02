@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { ChevronDown, Plus, Trash2, Link as LinkIcon } from 'lucide-react';
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
 import { useAutoSave } from '@/hooks/useAutoSave';
@@ -32,6 +32,15 @@ export function SourceCard({
   const [isOpen, setIsOpen] = useState(true);
   const [title, setTitle] = useState(source.title);
   const [url, setUrl] = useState(source.url || '');
+  const titleInputRef = useRef<HTMLInputElement>(null);
+
+  // Auto-focus and select text for newly created sources
+  useEffect(() => {
+    if (source.title === 'New Source' && titleInputRef.current) {
+      titleInputRef.current.focus();
+      titleInputRef.current.select();
+    }
+  }, []);
 
   const handleSaveTitle = useCallback(async (data: { title: string }) => {
     if (data.title.trim() && data.title !== source.title) {
@@ -67,6 +76,7 @@ export function SourceCard({
             />
             <div className="flex-1 min-w-0" onClick={(e) => e.stopPropagation()}>
               <input
+                ref={titleInputRef}
                 type="text"
                 value={title}
                 onChange={(e) => {
