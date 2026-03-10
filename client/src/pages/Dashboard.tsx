@@ -170,12 +170,19 @@ const { toast } = useToast();
   const userPermission = data?.userPermission ?? null;
   const isOwner = userPermission === 'owner';
   const canModify = userPermission === 'owner' || userPermission === 'editor' || isAdmin;
+  const isLegacyBuildRedirect = viewMode === 'build' && data?.sourceType === 'builder' && canModify && !isSharedView;
 
 const { downloadBrainliftPDF } = usePDFExport();
 
   const handleUpdateAuthor = (author: string) => {
     updateAuthor(author).then(() => setEditingAuthor(false));
   };
+
+  useEffect(() => {
+    if (isLegacyBuildRedirect) {
+      window.location.replace(`/builder/${slug}${requestedBuilderPhase}`);
+    }
+  }, [isLegacyBuildRedirect, requestedBuilderPhase, slug]);
 
   const isNotBrainlift = data?.classification === 'not_brainlift';
   const isPartialBrainlift = data?.classification === 'partial';
@@ -263,13 +270,6 @@ const { downloadBrainliftPDF } = usePDFExport();
   );
 
   const { facts, contradictionClusters } = data;
-  const isLegacyBuildRedirect = viewMode === 'build' && data.sourceType === 'builder' && canModify && !isSharedView;
-
-  useEffect(() => {
-    if (isLegacyBuildRedirect) {
-      window.location.replace(`/builder/${slug}${requestedBuilderPhase}`);
-    }
-  }, [isLegacyBuildRedirect, requestedBuilderPhase, slug]);
 
   if (isLegacyBuildRedirect) {
     return (
