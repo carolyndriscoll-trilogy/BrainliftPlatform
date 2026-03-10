@@ -83,6 +83,12 @@ export default function Dashboard({ slug, isSharedView = false }: DashboardProps
     return params.get('mode') === 'build' ? 'build' : 'view';
   }, [searchString]);
 
+  const requestedBuilderPhase = useMemo(() => {
+    const params = new URLSearchParams(searchString);
+    const phase = params.get('phase');
+    return phase ? `?phase=${phase}` : '';
+  }, [searchString]);
+
   const setViewMode = useCallback((mode: 'build' | 'view') => {
     if (mode === 'build') {
       setLocation(`/builder/${slug}`);
@@ -261,12 +267,21 @@ const { downloadBrainliftPDF } = usePDFExport();
 
   useEffect(() => {
     if (isLegacyBuildRedirect) {
-      setLocation(`/builder/${slug}`);
+      window.location.replace(`/builder/${slug}${requestedBuilderPhase}`);
     }
-  }, [isLegacyBuildRedirect, setLocation, slug]);
+  }, [isLegacyBuildRedirect, requestedBuilderPhase, slug]);
 
   if (isLegacyBuildRedirect) {
-    return null;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background text-foreground">
+        <div className="text-center">
+          <div className="text-[11px] uppercase tracking-[0.18em] font-semibold text-muted-foreground mb-3">
+            Builder
+          </div>
+          <div className="text-lg font-semibold">Opening the dedicated builder workspace...</div>
+        </div>
+      </div>
+    );
   }
 
   return (
