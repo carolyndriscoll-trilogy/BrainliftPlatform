@@ -129,8 +129,8 @@ export default function Home() {
     }
   };
 
-  const handleBrainliftImportSuccess = (slug: string) => {
-    setLocation(`/grading/${slug}`);
+  const handleBrainliftImportSuccess = (destination: string) => {
+    setLocation(destination);
   };
 
   const handleFilterChange = useCallback((newFilter: 'all' | 'owned' | 'shared') => {

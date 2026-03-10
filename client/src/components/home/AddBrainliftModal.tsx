@@ -28,7 +28,7 @@ const CASCADE_ORDERED_STAGES: Exclude<ImportStage, 'complete' | 'error'>[] = [
 interface AddBrainliftModalProps {
   show: boolean;
   onClose: () => void;
-  onSuccess: (slug: string) => void;
+  onSuccess: (destination: string) => void;
 }
 
 export function AddBrainliftModal({ show, onClose, onSuccess }: AddBrainliftModalProps) {
@@ -59,7 +59,7 @@ export function AddBrainliftModal({ show, onClose, onSuccess }: AddBrainliftModa
       }
       const data = await res.json();
       onClose();
-      onSuccess(`${data.slug}?mode=build&phase=1`);
+      onSuccess(`/builder/${data.slug}?phase=1`);
     } catch (err: any) {
       setError(err.message || 'Failed to create brainlift');
     } finally {
@@ -91,7 +91,7 @@ export function AddBrainliftModal({ show, onClose, onSuccess }: AddBrainliftModa
     resetAll();
     onClose();
     if (linkingSlug) {
-      onSuccess(linkingSlug);
+      onSuccess(`/grading/${linkingSlug}`);
     }
   }, [importWithProgress, resetAll, onClose, onSuccess]);
 
@@ -128,7 +128,7 @@ export function AddBrainliftModal({ show, onClose, onSuccess }: AddBrainliftModa
       importWithProgress.reset();
       resetAll();
       onClose();
-      onSuccess(slug);
+      onSuccess(`/grading/${slug}`);
     }
   };
 

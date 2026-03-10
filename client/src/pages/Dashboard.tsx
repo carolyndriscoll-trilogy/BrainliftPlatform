@@ -1,6 +1,6 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Link, useSearch } from 'wouter';
+import { Link, useLocation, useSearch } from 'wouter';
 import { authClient } from '@/lib/auth-client';
 import { BrainliftVersion, type Fact } from '@shared/schema';
 import { AlertTriangle, FileText, Loader2 } from 'lucide-react';
@@ -28,8 +28,6 @@ import { DOK4Tab } from '@/components/DOK4Tab';
 import { DOK3LinkingUI } from '@/components/DOK3LinkingUI';
 import { LearningStreamTab } from '@/components/LearningStreamTab';
 import { SavedItemsPage, GradedItemsPage } from '@/components/learning-stream';
-import { BuilderView } from '@/components/builder/BuilderView';
-import { BuilderShell } from '@/components/builder/BuilderShell';
 import { usePDFExport } from '@/hooks/usePDFExport';
 import { useShareToken } from '@/hooks/useShareToken';
 import { useDOK3Insights } from '@/hooks/useDOK3Insights';
@@ -67,6 +65,7 @@ const NAV_ITEMS: NavItem[] = [
 ];
 
 export default function Dashboard({ slug, isSharedView = false }: DashboardProps) {
+  const [, setLocation] = useLocation();
   // Handle share token redemption if ?share=TOKEN is present
   const { isRedeeming } = useShareToken();
 
@@ -85,17 +84,17 @@ export default function Dashboard({ slug, isSharedView = false }: DashboardProps
   }, [searchString]);
 
   const setViewMode = useCallback((mode: 'build' | 'view') => {
-    const params = new URLSearchParams(window.location.search);
     if (mode === 'build') {
-      params.set('mode', 'build');
-    } else {
-      params.delete('mode');
+      setLocation(`/builder/${slug}`);
+      return;
     }
+    const params = new URLSearchParams(window.location.search);
+    params.delete('mode');
     const newSearch = params.toString();
     const newUrl = newSearch ? `?${newSearch}` : window.location.pathname;
     window.history.replaceState(null, '', newUrl);
     window.dispatchEvent(new PopStateEvent('popstate'));
-  }, []);
+  }, [setLocation, slug]);
 
   // URL-synced expanded item (?view=123)
   const viewingItemId = useMemo(() => {
@@ -258,21 +257,16 @@ const { downloadBrainliftPDF } = usePDFExport();
   );
 
   const { facts, contradictionClusters } = data;
-  const showFullScreenBuilder = viewMode === 'build' && data.sourceType === 'builder' && canModify && !isSharedView;
+  const isLegacyBuildRedirect = viewMode === 'build' && data.sourceType === 'builder' && canModify && !isSharedView;
 
-  if (showFullScreenBuilder) {
-    return (
-      <BuilderShell
-        data={data}
-        slug={slug}
-        onPreview={() => setViewMode('view')}
-        editingAuthor={editingAuthor}
-        setEditingAuthor={setEditingAuthor}
-        authorInput={authorInput}
-        setAuthorInput={setAuthorInput}
-        onUpdateAuthor={handleUpdateAuthor}
-      />
-    );
+  useEffect(() => {
+    if (isLegacyBuildRedirect) {
+      setLocation(`/builder/${slug}`);
+    }
+  }, [isLegacyBuildRedirect, setLocation, slug]);
+
+  if (isLegacyBuildRedirect) {
+    return null;
   }
 
   return (
@@ -327,11 +321,6 @@ const { downloadBrainliftPDF } = usePDFExport();
             </div>
           </div>
         </div>
-      )}
-
-      {/* Builder View */}
-      {viewMode === 'build' && (
-        <BuilderView data={data} slug={slug} />
       )}
 
       {/* Brainlift Tab - Original Document */}
